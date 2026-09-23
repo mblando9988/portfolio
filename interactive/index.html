@@ -522,8 +522,8 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
   <header>
     <div class="sig">
       <span class="sig-k">Portfolio of</span>
-      <a class="sig-name" href="mailto:Mblando98@outlook.com">Michael Blando</a>
-      <a class="sig-mail" href="mailto:Mblando98@outlook.com">Mblando98@outlook.com</a>
+      <a class="sig-name" href="mailto:mblando98@outlook.com">Michael Blando</a>
+      <a class="sig-mail" href="mailto:mblando98@outlook.com">mblando98@outlook.com</a>
     </div>
   </header>
 
@@ -535,7 +535,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <div class="pc-kick">01 · Computer Vision</div>
           <h3 class="pc-title">Vehicle <em>Re-Identification</em></h3>
           <div class="pc-photo"><img loading="eager" fetchpriority="high" decoding="async" src="assets/reid/card.png" alt="cross-camera vehicle matches"></div>
-          <p class="pc-snip">Track and score vehicles across interstate highways, re-finding the same car between zero-overlap cameras at 10&#8202;px to 90&#8202;px quality.</p>
+          <p class="pc-snip">Track and score vehicles across interstate highways, re-finding the same car from one camera to the next at 10&#8202;px to 90&#8202;px quality.</p>
           <div class="pc-open">Open the project →</div>
         </div></div>
       </article>
@@ -555,7 +555,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <div class="pc-kick">03 · GPU / 3D</div>
           <h3 class="pc-title">Rebuilding the city in <em>3D</em></h3>
           <div class="pc-photo"><img loading="lazy" decoding="async" src="assets/splat/card.jpg" alt="a highway and river rebuilt as a 3D Gaussian splat, seen from a new angle"></div>
-          <p class="pc-snip">Turn ordinary street and dashcam video into a walkable 3D scene, rendered by hand-written Metal GPU shaders on a laptop with no cloud GPU.</p>
+          <p class="pc-snip">Turn video of the road into a 3D scene you can view from new angles, rendered by hand-written Metal GPU shaders on a laptop with no cloud GPU.</p>
           <div class="pc-open">Open the project →</div>
         </div></div>
       </article>
@@ -573,7 +573,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
       <article class="pcard slot" data-proj="p2">
         <div class="pc-float"><div class="pc-frame">
           <div class="pc-kick">05 · On-Device NLP</div>
-          <h3 class="pc-title">Catching the <em>overclaim</em></h3>
+          <h3 class="pc-title">Catching <em>false claims</em></h3>
           <div class="pc-photo"><div class="numgrid" aria-hidden="true">
             <div class="ncol hot"><div class="nstrip"><i>2</i><i>9</i><i>1</i><i>0</i><i>3</i><i>0</i><i>0</i><i>6</i><i>4</i><i>2</i><i>9</i><i>1</i><i>0</i><i>3</i><i>0</i><i>0</i><i>6</i><i>4</i></div></div>
             <div class="ncol"><div class="nstrip"><i>0</i><i>5</i><i>6</i><i>4</i><i>9</i><i>5</i><i>3</i><i>1</i><i>7</i><i>0</i><i>5</i><i>6</i><i>4</i><i>9</i><i>5</i><i>3</i><i>1</i><i>7</i></div></div>
@@ -582,7 +582,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
             <div class="ncol"><div class="nstrip"><i>0</i><i>7</i><i>2</i><i>5</i><i>9</i><i>1</i><i>3</i><i>8</i><i>6</i><i>0</i><i>7</i><i>2</i><i>5</i><i>9</i><i>1</i><i>3</i><i>8</i><i>6</i></div></div>
             <div class="ncol"><div class="nstrip"><i>4</i><i>1</i><i>8</i><i>0</i><i>6</i><i>3</i><i>9</i><i>2</i><i>0</i><i>4</i><i>1</i><i>8</i><i>0</i><i>6</i><i>3</i><i>9</i><i>2</i><i>0</i></div></div>
           </div></div>
-          <p class="pc-snip">A small on-device model that reads the grammar of a false action-claim — and flags it inline, before the line ships.</p>
+          <p class="pc-snip">A small on-device model that spots when an AI coding agent claims work it never did, and flags the line before it is shown.</p>
           <div class="pc-open">Open the project →</div>
         </div></div>
       </article>
@@ -617,7 +617,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
         </div>
         <div class="dbody">
           <ol class="pipe" aria-label="Pipeline"><li class="on">01 Re-ID</li><li>02 Vehicles in 3D</li><li>03 Gaussian splat</li><li>04 Crash reconstruction</li><li class="goal"><span>Goal · 100+ miles of cameras<em class="gsub">ZIP-code fraud, late-night and dangerous driving, crashes</em></span></li></ol>
-          <p class="dthesis">Two highway cameras sit miles apart and never share a view. The same car passes both, minutes apart. This project decides whether those two sightings are one vehicle, working only from what the cameras capture: small, blurry, low-light crops with no plate left to read.</p>
+          <p class="dthesis">Two highway cameras can sit a few hundred yards or several miles apart. The same car passes one, then the other, seconds or minutes later. This project decides whether those two sightings are one vehicle, working only from what the cameras capture: small, blurry, low-light crops with no plate left to read.</p>
           <p class="dpara">There is rarely a single readable detail to lean on, so the match runs on the whole appearance of the car: its shape, its stance, its colour, the way light sits on the body. A vehicle picked up by one camera can then be found again on the next. Chain those matches together and a car only ever glimpsed in fragments becomes one continuous trail, across a network that was never built to follow it.</p>
           <div class="dghead"><span class="t">Same vehicle, across the network</span><span class="s">more sightings · one car</span></div>
           <div class="trail">
@@ -629,14 +629,14 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <div class="dghead"><span class="t">The camera network</span><span class="s">511PA &middot; greater Philadelphia</span></div>
           <div class="montage"><img loading="lazy" decoding="async" src="assets/reid/network-map.jpg" alt="satellite map of greater Philadelphia with a blue dot at each 511PA traffic camera and I-76 traced in orange"></div>
           <p class="mcapt"><b>432</b> of the <b>1,537</b> cameras in Pennsylvania&rsquo;s 511PA network, which covers 21 interstates and 61 of 67 counties. Orange: I-76, the Schuylkill Expressway. Camera locations: 511PA. Imagery: USGS. Roads &copy; OpenStreetMap contributors.</p>
-          <div class="dghead"><span class="t">The network, placed in the world</span><span class="s">3D scene reconstruction</span></div>
-          <p class="dpara">Knowing two cameras saw the same car is only half the answer. The other half is geography: where each camera sits, which way it points, and exactly which stretch of road it can see. So a camera can be set inside a photoreal 3D model of the city, at its real coordinates, with the stretch of road it covers projected onto the street. Camera 4876, below, is one of them.</p>
+          <div class="dghead"><span class="t">The network, placed in the world</span><span class="s">Google 3D map tiles</span></div>
+          <p class="dpara">Knowing two cameras saw the same car is only half the answer. The other half is geography: where each camera sits, which way it points, and exactly which stretch of road it can see. So a camera can be set inside Google&rsquo;s photorealistic 3D map of the city, at its real coordinates, with the stretch of road it covers projected onto the street. Camera 4876, below, is one of them.</p>
           <div class="geo">
-            <img loading="lazy" decoding="async" src="assets/reid/geo_scene.jpg" alt="a highway camera rebuilt in a photoreal 3D model of the city, its viewing frustum projected onto the road below">
-            <div class="geohud"><span class="gdot"></span>Live · 06:04:59 UTC</div>
+            <img loading="lazy" decoding="async" src="assets/reid/geo_scene.jpg" alt="a highway camera placed in Google&rsquo;s photorealistic 3D map tiles, its viewing frustum projected onto the road below">
+            
           </div>
-          <p class="mcapt">Camera <b>4876</b> on I-76 westbound, rebuilt in 3D over the Schuylkill. The gold frustum is the camera's real field of view projected onto the road, with the raw night feed inset at lower right.</p>
-          <div class="specrow"><span class="spec">39.96397° N, 75.18418° W</span><span class="spec">bearing 248°</span><span class="spec">62° field of view</span><span class="spec">photoreal 3D tiles</span></div>
+          <p class="mcapt">Camera <b>4876</b> on I-76 westbound, placed at its real position in Google&rsquo;s 3D map tiles over the Schuylkill. The gold frustum is the camera's real field of view projected onto the road, with the raw night feed inset at lower right.</p>
+          <div class="specrow"><span class="spec">39.96397° N, 75.18418° W</span><span class="spec">62° field of view</span><span class="spec">photoreal 3D tiles</span></div>
           <div class="dghead"><span class="t">Tracking, live</span><span class="s">per-camera IDs &middot; one Tesla on both</span></div>
           <div class="duo duo-track">
             <div class="duo-cell duo-a"><img loading="lazy" decoding="async" src="../assets/img/reid/tracking-1.jpg" alt="live expressway camera with a green box, ID and motion trail on each vehicle; the Tesla, #265 on this camera, in yellow"></div>
@@ -680,14 +680,14 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <g class="links-under"><line x1="218.7" y1="47.2" x2="593.4" y2="59.7" data-c="#ff3b30"/><line x1="126.4" y1="66.2" x2="502.7" y2="71.6" data-c="#ffcc00"/><line x1="176.6" y1="149.5" x2="545.2" y2="169.5" data-c="#34c759"/><line x1="57.2" y1="161.5" x2="436.9" y2="169.3" data-c="#32ade6"/><line x1="41.1" y1="181.6" x2="423.2" y2="186.3" data-c="#007aff"/><line x1="212.6" y1="199.4" x2="574.4" y2="228.1" data-c="#af52de"/><line x1="147.4" y1="222.4" x2="515.4" y2="240.0" data-c="#f59e0b"/></g>
           <g class="links"><line x1="218.7" y1="47.2" x2="593.4" y2="59.7" stroke="#ff3b30"/><line x1="126.4" y1="66.2" x2="502.7" y2="71.6" stroke="#ffcc00"/><line x1="176.6" y1="149.5" x2="545.2" y2="169.5" stroke="#34c759"/><line x1="57.2" y1="161.5" x2="436.9" y2="169.3" stroke="#32ade6"/><line x1="41.1" y1="181.6" x2="423.2" y2="186.3" stroke="#007aff"/><line x1="212.6" y1="199.4" x2="574.4" y2="228.1" stroke="#af52de"/><line x1="147.4" y1="222.4" x2="515.4" y2="240.0" stroke="#f59e0b"/></g>
           <g class="kps"><g stroke="#ff3b30"><circle cx="218.7" cy="47.2" r="6.0"/><line x1="218.7" y1="47.2" x2="223.7" y2="43.8"/><circle cx="593.4" cy="59.7" r="6.0"/><line x1="593.4" y1="59.7" x2="598.6" y2="56.7"/></g><g stroke="#ffcc00"><circle cx="126.4" cy="66.2" r="6.0"/><line x1="126.4" y1="66.2" x2="126.4" y2="72.2"/><circle cx="502.7" cy="71.6" r="6.0"/><line x1="502.7" y1="71.6" x2="502.2" y2="77.6"/></g><g stroke="#34c759"><circle cx="176.6" cy="149.5" r="6.0"/><line x1="176.6" y1="149.5" x2="174.2" y2="155.0"/><circle cx="545.2" cy="169.5" r="6.0"/><line x1="545.2" y1="169.5" x2="542.5" y2="174.9"/></g><g stroke="#32ade6"><circle cx="57.2" cy="161.5" r="6.0"/><line x1="57.2" y1="161.5" x2="58.5" y2="167.4"/><circle cx="436.9" cy="169.3" r="6.0"/><line x1="436.9" y1="169.3" x2="437.8" y2="175.2"/></g><g stroke="#007aff"><circle cx="41.1" cy="181.6" r="6.0"/><line x1="41.1" y1="181.6" x2="46.8" y2="183.6"/><circle cx="423.2" cy="186.3" r="6.0"/><line x1="423.2" y1="186.3" x2="428.7" y2="188.7"/></g><g stroke="#af52de"><circle cx="212.6" cy="199.4" r="7.9"/><line x1="212.6" y1="199.4" x2="219.4" y2="195.2"/><circle cx="574.4" cy="228.1" r="7.3"/><line x1="574.4" y1="228.1" x2="580.8" y2="224.7"/></g><g stroke="#f59e0b"><circle cx="147.4" cy="222.4" r="11.0"/><line x1="147.4" y1="222.4" x2="136.7" y2="219.8"/><circle cx="515.4" cy="240.0" r="10.8"/><line x1="515.4" y1="240.0" x2="505.0" y2="236.8"/></g></g>
-        </svg></div><div class="mpcap"><span>sim <b>0.89</b></span><span class="mtag">RE-FOUND</span></div></div>
+        </svg></div><div class="mpcap"><span>sim <b>0.90</b></span><span class="mtag">RE-FOUND</span></div></div>
             <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 774.1 300" role="img" aria-label="Two sightings of a white hatchback from different cameras, with 9 lines linking the same points on the vehicle">
           <image href="../assets/img/reid/pair-hatchback-a.jpg" x="0" y="0" width="399.2" height="300" preserveAspectRatio="none"/>
           <image href="../assets/img/reid/pair-hatchback-b.jpg" x="439.2" y="0" width="334.8" height="300" preserveAspectRatio="none"/>
           <g class="links-under"><line x1="303.5" y1="31.2" x2="704.2" y2="40.5" data-c="#ff3b30"/><line x1="231.9" y1="54.2" x2="646.3" y2="62.1" data-c="#ff9500"/><line x1="147.7" y1="62.3" x2="573.9" y2="68.0" data-c="#a3e635"/><line x1="334.6" y1="70.4" x2="718.5" y2="78.6" data-c="#34c759"/><line x1="313.8" y1="91.2" x2="699.0" y2="101.7" data-c="#32ade6"/><line x1="237.7" y1="110.8" x2="640.2" y2="118.1" data-c="#007aff"/><line x1="263.1" y1="125.8" x2="661.2" y2="132.3" data-c="#5856d6"/><line x1="234.2" y1="162.7" x2="635.5" y2="170.7" data-c="#ff2d55"/><line x1="120.0" y1="174.2" x2="549.8" y2="182.1" data-c="#f59e0b"/></g>
           <g class="links"><line x1="303.5" y1="31.2" x2="704.2" y2="40.5" stroke="#ff3b30"/><line x1="231.9" y1="54.2" x2="646.3" y2="62.1" stroke="#ff9500"/><line x1="147.7" y1="62.3" x2="573.9" y2="68.0" stroke="#a3e635"/><line x1="334.6" y1="70.4" x2="718.5" y2="78.6" stroke="#34c759"/><line x1="313.8" y1="91.2" x2="699.0" y2="101.7" stroke="#32ade6"/><line x1="237.7" y1="110.8" x2="640.2" y2="118.1" stroke="#007aff"/><line x1="263.1" y1="125.8" x2="661.2" y2="132.3" stroke="#5856d6"/><line x1="234.2" y1="162.7" x2="635.5" y2="170.7" stroke="#ff2d55"/><line x1="120.0" y1="174.2" x2="549.8" y2="182.1" stroke="#f59e0b"/></g>
           <g class="kps"><g stroke="#ff3b30"><circle cx="303.5" cy="31.2" r="6.0"/><line x1="303.5" y1="31.2" x2="309.4" y2="32.2"/><circle cx="704.2" cy="40.5" r="6.0"/><line x1="704.2" y1="40.5" x2="710.1" y2="41.3"/></g><g stroke="#ff9500"><circle cx="231.9" cy="54.2" r="6.0"/><line x1="231.9" y1="54.2" x2="234.6" y2="48.9"/><circle cx="646.3" cy="62.1" r="6.0"/><line x1="646.3" y1="62.1" x2="648.7" y2="56.6"/></g><g stroke="#a3e635"><circle cx="147.7" cy="62.3" r="6.0"/><line x1="147.7" y1="62.3" x2="153.0" y2="59.4"/><circle cx="573.9" cy="68.0" r="6.0"/><line x1="573.9" y1="68.0" x2="579.0" y2="64.9"/></g><g stroke="#34c759"><circle cx="334.6" cy="70.4" r="6.0"/><line x1="334.6" y1="70.4" x2="339.9" y2="67.5"/><circle cx="718.5" cy="78.6" r="6.0"/><line x1="718.5" y1="78.6" x2="723.6" y2="75.5"/></g><g stroke="#32ade6"><circle cx="313.8" cy="91.2" r="6.0"/><line x1="313.8" y1="91.2" x2="308.5" y2="94.0"/><circle cx="699.0" cy="101.7" r="6.0"/><line x1="699.0" y1="101.7" x2="693.8" y2="104.7"/></g><g stroke="#007aff"><circle cx="237.7" cy="110.8" r="6.0"/><line x1="237.7" y1="110.8" x2="242.7" y2="107.4"/><circle cx="640.2" cy="118.1" r="6.0"/><line x1="640.2" y1="118.1" x2="645.1" y2="114.6"/></g><g stroke="#5856d6"><circle cx="263.1" cy="125.8" r="6.0"/><line x1="263.1" y1="125.8" x2="268.5" y2="123.2"/><circle cx="661.2" cy="132.3" r="6.0"/><line x1="661.2" y1="132.3" x2="666.5" y2="129.6"/></g><g stroke="#ff2d55"><circle cx="234.2" cy="162.7" r="6.0"/><line x1="234.2" y1="162.7" x2="231.2" y2="157.5"/><circle cx="635.5" cy="170.7" r="6.0"/><line x1="635.5" y1="170.7" x2="632.2" y2="165.6"/></g><g stroke="#f59e0b"><circle cx="120.0" cy="174.2" r="6.0"/><line x1="120.0" y1="174.2" x2="122.2" y2="168.7"/><circle cx="549.8" cy="182.1" r="6.0"/><line x1="549.8" y1="182.1" x2="551.9" y2="176.5"/></g></g>
-        </svg></div><div class="mpcap"><span>sim <b>0.90</b></span><span class="mtag">RE-FOUND</span></div></div>
+        </svg></div><div class="mpcap"><span>sim <b>0.89</b></span><span class="mtag">RE-FOUND</span></div></div>
             <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 587.8 300" role="img" aria-label="Two sightings of a white passenger van from different cameras, with 9 lines linking the same points on the vehicle">
           <image href="../assets/img/reid/pair-van-a.jpg" x="0" y="0" width="290.0" height="300" preserveAspectRatio="none"/>
           <image href="../assets/img/reid/pair-van-b.jpg" x="330.0" y="0" width="257.9" height="300" preserveAspectRatio="none"/>
@@ -707,11 +707,11 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <div class="dghead"><span class="t">Two more re-finds, timed</span><span class="s">time between sightings</span></div>
           <div class="mpwrap">
             <div class="mpair"><div class="mpimg"><img loading="lazy" decoding="async" src="assets/reid/timed-suv.jpg" alt="the same blue SUV from behind on two cameras"></div><div class="mpcap"><span>sim <b>0.65</b> &middot; 72 s apart</span><span class="mtag">RE-FOUND</span></div></div>
-            <div class="mpair"><div class="mpimg"><img loading="lazy" decoding="async" src="assets/reid/timed-van.jpg" alt="the same white cargo van on two cameras"></div><div class="mpcap"><span>sim <b>0.58</b> &middot; 52 s apart</span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair"><div class="mpimg"><img loading="lazy" decoding="async" src="assets/reid/timed-van.jpg" alt="the same white cargo van on two cameras"></div><div class="mpcap"><span>sim <b>0.70</b> &middot; 52 s apart</span><span class="mtag">RE-FOUND</span></div></div>
           </div>
           <p class="mcapt">Time between the two sightings, from the pipeline&rsquo;s output.</p>
           <div class="dghead"><span class="t">Match to a sketch</span><span class="s">make &middot; model &middot; year</span></div>
-          <p class="dpara">The input is tiny. A one to two second clip at 320&times;240, where the vehicle crop stands barely 10 to 90 pixels tall. From the fused frame, the pipeline pulls an edge map and a silhouette, then matches that shape against a library of reference sketches to call the vehicle&rsquo;s <em>make, model and year</em>. No plate, no colour, and no readable badge needed.</p>
+          <p class="dpara">The input is tiny. A one to two second clip at 320&times;240, where the vehicle crop stands barely 10 to 90 pixels tall. From the fused frame, the pipeline pulls an edge map and a silhouette, then matches that shape against a library of reference sketches to call the vehicle&rsquo;s <em>make and model</em>. No plate, no colour, and no readable badge needed.</p>
           <div class="specrow"><span class="spec">320&times;240 source</span><span class="spec">1-2&thinsp;s clip</span><span class="spec">10-90&thinsp;px crop</span><span class="spec">plate-free</span></div>
           <div class="sketch">
             <div class="sk-head"><span>Camera</span><span>Edges</span><span>Silhouette</span><span>Sketch</span></div>
@@ -754,30 +754,30 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
       <div class="dview" data-proj="p2">
         <div class="dhead">
           <div class="dkick">05 · On-Device NLP</div>
-          <h2 class="dtitle">Catching the <em>overclaim</em> before it lands</h2>
+          <h2 class="dtitle">Catching <em>false claims</em> in AI agent replies</h2>
         </div>
         <div class="dbody">
-          <p class="dthesis">A small model, hand-tuned on ten million words of Claude transcripts, that reads the grammar of a false action claim and flags it the moment it forms. It runs inline and on-device, before the line ever reaches the reader.</p>
-          <p class="dpara">Overclaims have a grammar. The model is not checking facts. It recognizes the <em>shape</em> of a sentence that asserts an action the assistant never took: a finished task, a tool result, a sweeping certainty with nothing behind it.</p>
-          <div class="specrow"><span class="spec">10M words hand-tuned</span><span class="spec">runs on-device</span><span class="spec">scored inline</span><span class="spec">no server</span></div>
+          <p class="dthesis">Built on Claude Code as the harness. A small on-device model reads each reply as it streams and flags any sentence that claims an action the agent never took, such as saying it ran the tests when no test command ran that turn.</p>
+          <p class="dpara">False claims follow a few patterns: a task described as finished, a tool result nobody ran, or a flat certainty with nothing behind it. The model looks for those patterns in the wording, and a second step checks each flagged claim against the tool calls the agent actually made.</p>
+          <div class="specrow"><span class="spec">Claude Code harness</span><span class="spec">runs on-device</span><span class="spec">scored inline</span><span class="spec">no server</span></div>
           <div class="dghead"><span class="t">A turn, marked up</span><span class="s">scored inline &middot; on-device</span></div>
-          <div class="montage"><img loading="lazy" decoding="async" src="assets/p2/markup.png" alt="an assistant turn marked up — three overclaims underlined, each tied to the tell that caught it"></div>
-          <p class="mcapt">The reply is read like a proof. Each overclaim is <b>underlined</b> and tied to the linguistic tell that caught it, with one quiet verdict. <b>&ldquo;ran the full test suite&rdquo;</b> has no matching tool call this turn.</p>
-          <div class="dghead"><span class="t">What it watches for</span><span class="s">four learned tells</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/p2/markup.png" alt="an assistant reply marked up, with three false claims underlined and labeled with the pattern that caught each one"></div>
+          <p class="mcapt">Each flagged phrase is <b>underlined</b> and labeled with the pattern that caught it. Here, <b>&ldquo;ran the full test suite&rdquo;</b> has no matching tool call this turn.</p>
+          <div class="dghead"><span class="t">What it watches for</span><span class="s">four patterns</span></div>
           <div class="tells">
             <div class="tell"><span class="tn">past-tense completion</span><span class="tf">F-4172</span></div>
             <div class="tell"><span class="tn">unverified tool result</span><span class="tf">F-0881</span></div>
             <div class="tell"><span class="tn">blanket certainty</span><span class="tf">F-3390</span></div>
             <div class="tell"><span class="tn">first-person action</span><span class="tf">F-1207</span></div>
           </div>
-          <div class="dghead"><span class="t">From clip to flag</span><span class="s">capture &rarr; flag</span></div>
+          <div class="dghead"><span class="t">From reply to flag</span><span class="s">capture &rarr; flag</span></div>
           <div class="flow">
             <div class="fline"></div><div class="ffill"></div>
             <div class="frow">
               <div class="fstep"><span class="fdot"></span><div class="fn">01</div><div class="ft">Capture</div><div class="fd">the turn's text, as it streams</div></div>
               <div class="fstep"><span class="fdot"></span><div class="fn">02</div><div class="ft">Tokenize</div><div class="fd">split into spans, on-device</div></div>
-              <div class="fstep"><span class="fdot"></span><div class="fn">03</div><div class="ft">Scan</div><div class="fd">match the learned grammar</div></div>
-              <div class="fstep"><span class="fdot"></span><div class="fn">04</div><div class="ft">Score</div><div class="fd">weight the active tells</div></div>
+              <div class="fstep"><span class="fdot"></span><div class="fn">03</div><div class="ft">Scan</div><div class="fd">match the known patterns</div></div>
+              <div class="fstep"><span class="fdot"></span><div class="fn">04</div><div class="ft">Score</div><div class="fd">weight the matched patterns</div></div>
               <div class="fstep last"><span class="fdot"></span><div class="fn">05</div><div class="ft">Flag</div><div class="fd">raise it before the span shows</div></div>
             </div>
           </div>
@@ -799,7 +799,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
                 <div class="simrow"><span class="snm">read_file<i>config/router.ts</i></span><span class="bar"><span style="width:11%"></span></span><span class="score">0.11</span></div>
                 <div class="simrow"><span class="snm">grep<i>&ldquo;test&rdquo;</i></span><span class="bar"><span style="width:21%"></span></span><span class="score">0.21</span></div>
               </div>
-              <div class="verdict bad"><span class="vd">overclaim</span><span>top match 0.21, under the 0.35 threshold. nothing this turn ran the suite.</span></div>
+              <div class="verdict bad"><span class="vd">false claim</span><span>top match 0.21, under the 0.35 threshold. nothing this turn ran the suite.</span></div>
             </div>
           </div>
           <div class="vcontrast"><span class="vc-tag">cleared</span><span class="vc-claim">refactored the auth module</span><span class="vc-right"><span class="vc-tool">edit_file &middot; auth/session.ts</span><span class="vc-bar"><span style="width:86%"></span></span><span class="vc-score">0.86</span></span></div>
@@ -810,9 +810,9 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
             <div class="tsig"><span class="fn">embed</span><span class="sg">(token[])</span><span class="ar">&rarr;</span><span class="rt">vec[768]</span></div>
             <div class="tsig"><span class="fn">cosine</span><span class="sg">(vec, vec)</span><span class="ar">&rarr;</span><span class="rt">0.00 to 1.00</span></div>
           </div>
-          <div class="dghead"><span class="t">How it learned</span><span class="s">10M words &middot; hand-labelled</span></div>
-          <p class="dpara">Ten million single words, pulled from real Claude transcripts and hand-labelled, tune a model small enough to run inline on-device, with no server and no round trip. It scores every span as it is generated and raises a flag before an overclaim reaches the reader.</p>
-          <p class="dnote">Built to live where the text is written: the same gold underline you would give a proof, drawn the instant a claim outruns what actually happened.</p>
+          <div class="dghead"><span class="t">How it was built</span><span class="s">Claude Code sessions</span></div>
+          <p class="dpara">Claude Code is the harness. The checker was built and tuned on transcripts from real Claude Code sessions, where every reply sits next to the tool calls behind it. The model is small enough to run inline on-device, with no server and no round trip, and it scores each span as it is generated.</p>
+          <p class="dnote">The underline appears as soon as a claim goes further than what the session actually did.</p>
         </div>
       </div>
 
@@ -826,12 +826,12 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <div class="specrow"><span class="spec">ArcGIS REST parcels</span><span class="spec">Redfin sold comps</span><span class="spec">Common Level Ratio</span><span class="spec">FEMA USA_Structures</span><span class="spec">sightline casting</span></div>
           <div class="dghead"><span class="t">One home, grossed up to market</span><span class="s">county est. &minus; comps = gap</span></div>
           <div class="calc">
-            <div class="crow"><div class="cl">County est. (implied FMV)</div><div class="cv">$847,367</div></div>
-            <div class="crow"><div class="cl">Comp value &middot; 6 real solds</div><div class="cv">$553,953</div></div>
-            <div class="crow"><div class="cl">Gap</div><div class="cv"><em>+34.6%</em></div><div class="cbar"><i style="width:34.6%"></i></div></div>
+            <div class="crow"><div class="cl">County est. (implied FMV)</div><div class="cv">&asymp;&#8202;$850,000</div></div>
+            <div class="crow"><div class="cl">Comp value &middot; 6 real solds</div><div class="cv">&asymp;&#8202;$550,000</div></div>
+            <div class="crow"><div class="cl">Gap</div><div class="cv"><em>&asymp;&#8202;+35%</em></div><div class="cbar"><i style="width:35%"></i></div></div>
             <div class="crow cverdict"><div class="cl">Verdict</div><div class="cv">HIGH &middot; appeal candidate</div></div>
           </div>
-          <p class="mcapt">A 2,892&thinsp;sqft, 4bd/2ba home in ZIP 19027, Montgomery County &mdash; assessed at $260,650, grossed up at the published 0.3076 ratio. Six comps, all within 0.73&thinsp;mi. The county's implied value sits <b>$293,414</b> above what those sales support &mdash; about <b>$4,041/yr</b> in excess tax at the county's median millage.</p>
+          <p class="mcapt">A 4-bed, 2-bath home of about 2,900&thinsp;sqft in Montgomery County, assessed at about $260,000 and grossed up at the published 0.3076 ratio. Six comps, all within 0.73&thinsp;mi. The county's implied value sits about <b>$300,000</b> above what those sales support, roughly <b>$4,000 a year</b> in excess tax at the county's median millage. Figures rounded to protect the owner.</p>
           <div class="dghead"><span class="t">The comp gates</span><span class="s">&le;1 mi &middot; &plusmn;20% sqft &middot; &le;24 mo</span></div>
           <p class="dpara">A comp is only admitted if it sold within a mile of the subject, within twenty percent of its square footage, within one bed and one bath, and within the last twenty-four months. Loosen any of those and the &ldquo;comp&rdquo; stops being evidence of what this home is worth and starts being noise. The gates are tuned to keep every candidate backed by four to six real, nearby, recent sales &mdash; nothing aspirational, nothing from a different market.</p>
           <div class="dghead"><span class="t">Method &middot; three moves</span><span class="s">gross up &middot; comp &middot; flag</span></div>
@@ -851,9 +851,9 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
           <p class="mcapt">Flagged homes (blue border) beside their own comps (gray), every tile centered on the dwelling with its view measured in the four compass directions. Production scores a home by its <b>farthest clear direction</b> and only calls it more open when that beats its comps' average by <b>15%+</b>.</p>
           <p class="dpara">It measured nothing. Regressed against the valuation gap across the county's flagged homes, openness came back at <em>r &asymp; 0.06</em> (p &asymp; 0.15) &mdash; indistinguishable from chance. Rather than ship a confounder as a feature, the view score was dropped as a screener signal. It survives only as a per-home tiebreaker inside an otherwise-tied band.</p>
           <div class="dghead"><span class="t">A new highway, parcel by parcel</span><span class="s">eminent domain &middot; US-322</span></div>
-          <p class="dpara">The same parcel tooling, pointed at a highway. PennDOT is planning the State College Area Connector on US-322. Every parcel in the corridor is pulled from PennDOT&rsquo;s own map service and colored by the owner&rsquo;s response to its survey-access notices, and a console built for a law firm ranks the 541 affected properties for outreach.</p>
-          <div class="montage"><img loading="lazy" decoding="async" src="../assets/img/law/corridor-parcels.jpg" alt="satellite view of the valley east of State College with every parcel in the planned corridor outlined and colored by the owner's response"></div>
-          <p class="mcapt">Parcels along PennDOT&rsquo;s planned corridor, from PennDOT&rsquo;s map service. Orange: no notice received, or refused. Green: contact the owner in advance.</p>
+          <p class="dpara">The same parcel tooling, pointed at a highway. PennDOT is planning the State College Area Connector on US-322. Every parcel in the corridor is pulled from PennDOT&rsquo;s own map service, and a console built for a law firm ranks the 541 affected properties for outreach.</p>
+          <div class="montage"><img loading="lazy" decoding="async" src="../assets/img/law/corridor-parcels.jpg" alt="satellite view of the valley east of State College with every parcel in the planned corridor outlined in blue"></div>
+          <p class="mcapt">Parcels along PennDOT&rsquo;s planned corridor, from PennDOT&rsquo;s map service.</p>
           <div class="montage"><img loading="lazy" decoding="async" src="../assets/img/law/corridor-console.jpg" alt="corridor console: a table of affected property owners beside a satellite map of the corridor parcels shaded by tier, with names and addresses blurred"></div>
           <p class="mcapt">The corridor console in use at the firm: 541 affected properties ranked for outreach, with tiers on the map. Names and addresses blurred.</p>
           <p class="dnote">The Montgomery County run flags <b>38,266</b> homes with a positive gap &mdash; <b>15,036</b> of them at ten percent or more, <b>$1.68B</b> of implied value that comparable sales can't find. Buildable so far: Montgomery, Northampton and Allegheny, with Lehigh partial: its portal sits behind a CAPTCHA, so living area is backfilled from Redfin sales. Full case study: <a href="montco/" style="color:var(--tan)">the $1.68B assessment gap</a>.</p>
@@ -867,7 +867,7 @@ body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
         </div>
         <div class="dbody">
           <ol class="pipe" aria-label="Pipeline"><li>01 Re-ID</li><li>02 Vehicles in 3D</li><li class="on">03 Gaussian splat</li><li>04 Crash reconstruction</li><li class="goal"><span>Goal · 100+ miles of cameras<em class="gsub">ZIP-code fraud, late-night and dangerous driving, crashes</em></span></li></ol>
-          <p class="dthesis">Ordinary street and dashcam footage, turned into a 3D scene you can move through. The whole reconstruction runs on a single laptop with no cloud GPU, on hand-written Metal shaders built to get past the limits of the usual tooling.</p>
+          <p class="dthesis">Video of the road around the cameras, turned into a 3D scene you can view from any angle. The whole reconstruction runs on a single laptop with no cloud GPU, on hand-written Metal shaders built to get past the limits of the usual tooling.</p>
           <p class="dpara">Gaussian splatting represents a scene as millions of tiny soft blobs of colour and light. Getting it to run well on Apple Silicon meant writing the heavy parts by hand: the rasterizer that draws every splat, the correspondence step that lines up views, and the sort that decides drawing order, all as custom Metal GPU shaders rather than the slow default path.</p>
           <div class="specrow"><span class="spec">Gaussian splatting</span><span class="spec">hand-written Metal shaders</span><span class="spec">Apple Silicon &middot; no cloud GPU</span><span class="spec">on a 24&#8202;GB laptop</span></div>
           <div class="dghead"><span class="t">The corridor, rebuilt in 3D</span><span class="s">Gaussian splat &middot; rendered from scratch</span></div>
