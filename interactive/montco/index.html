@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Is the view worth it? — Property-Tax-Appeal Screener, Montgomery County</title>
+<meta name="description" content="Montgomery County, PA: which homes the county over-assesses compared with recent comparable sales, and why view and openness did not explain the gap.">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<script>
+/* motion is opt-in: no JS or reduced-motion = everything visible, no animation */
+try{if(matchMedia('(prefers-reduced-motion: no-preference)').matches)document.documentElement.classList.add('anim')}catch(e){}
+</script>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  :root{
+    --ink:#0c0f16;
+    --ink2:#11151f;
+    --paper:#faf9f7;
+    --txt:#1c1f26;
+    --txt-dim:#5c6270;
+    --txt-inv:#f2f3f5;
+    --txt-inv-dim:#9aa1ae;
+    --red:#ff6b5e;
+    --green:#37c98b;
+    --line:#e7e4de;
+    --line-inv:#252b38;
+  }
+
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--paper);color:var(--txt);
+    line-height:1.6;-webkit-font-smoothing:antialiased
+  }
+  section{padding:0 24px}
+  .col{max-width:720px;margin:0 auto}
+  .colw{max-width:1080px;margin:0 auto}
+
+  h2{
+    font-size:clamp(1.5rem,3vw,2.1rem);font-weight:650;letter-spacing:-.02em;
+    line-height:1.2;margin-bottom:18px;color:#111
+  }
+  p{font-size:0.98rem;color:#3c414c;margin-bottom:16px;line-height:1.7}
+  p:last-child{margin-bottom:0}
+  .fine{font-size:0.75rem;color:#98917f;line-height:1.5}
+  code{
+    font-family:"SF Mono","Fira Code",monospace;
+    font-size:0.8em;background:#efece6;padding:1px 5px;border-radius:3px;color:#333
+  }
+
+  /* ---- back to portfolio ---- */
+  .backnav{
+    position:fixed;top:16px;left:18px;z-index:60;
+    font-family:"SF Mono","Fira Code",monospace;font-size:11px;letter-spacing:.08em;
+    color:#e8dcc2;text-decoration:none;
+    background:rgba(12,15,22,.82);border:1px solid rgba(236,201,143,.35);
+    padding:8px 14px;border-radius:999px;
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+    transition:border-color .25s ease,color .25s ease
+  }
+  .backnav:hover{color:#ecc98f;border-color:#ecc98f}
+
+  /* ================= HERO ================= */
+  .hero{
+    position:relative;color:var(--txt-inv);
+    padding:110px 24px 72px;overflow:hidden;
+    background:var(--ink);border-bottom:1px solid var(--line-inv)
+  }
+  .hero-bg{
+    position:absolute;inset:0;
+    background-image:url(sightline_openness.jpg);
+    background-size:cover;background-position:center;
+    opacity:.22;filter:saturate(1.15)
+  }
+  .hero-bg::after{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg,rgba(12,15,22,.55) 0%,rgba(12,15,22,.82) 62%,var(--ink) 100%)
+  }
+  .hero .inner{position:relative;z-index:2}
+  .hero .eyebrow{
+    font-size:0.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--txt-inv-dim);margin-bottom:26px
+  }
+  .hero .big{
+    font-size:clamp(2.4rem,6.5vw,4.4rem);font-weight:700;letter-spacing:-.03em;
+    line-height:1.04;color:#fff;max-width:900px;margin-bottom:22px
+  }
+  .hero .big .accent{color:var(--red)}
+  .hero .big .ok{color:var(--green)}
+  .hero .sub{
+    font-size:clamp(1rem,1.8vw,1.15rem);color:#c9cdd6;max-width:640px;line-height:1.65;margin-bottom:52px
+  }
+  .hero .sub strong{color:#fff;font-weight:600}
+  .hstats{display:flex;gap:56px;flex-wrap:wrap;border-top:1px solid rgba(236,201,143,.25);padding-top:28px}
+  .hstats .n{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:650;letter-spacing:-.03em;color:#fff}
+  .hstats .l{font-size:0.72rem;color:var(--txt-inv-dim);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
+  .hero .fine{margin-top:36px;color:#6b7280}
+
+  .anim .hero .eyebrow,.anim .hero .big,.anim .hero .sub,.anim .hstats,.anim .hero .fine{
+    animation:rise .8s cubic-bezier(.2,.6,.2,1) both
+  }
+  .anim .hero .big{animation-delay:.08s}
+  .anim .hero .sub{animation-delay:.2s}
+  .anim .hstats{animation-delay:.34s}
+  .anim .hero .fine{animation-delay:.46s}
+  @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+
+  .anim .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.6,.2,1)}
+  .anim .reveal.in{opacity:1;transform:none}
+
+  /* ================= DARK VIEW SECTION (continues from hero) ================= */
+  .showpiece{
+    background:var(--ink);color:var(--txt-inv);padding:88px 24px 96px
+  }
+  .showpiece h2{color:#fff}
+  .showpiece p{color:#b8bdc7}
+  .showpiece figcaption{color:#7b8290}
+  .showpiece figcaption strong{color:#aab0bb}
+  .showpiece figure img{border:1px solid var(--line-inv)}
+
+  /* verdict cards */
+  .verdicts{display:flex;gap:14px;flex-wrap:wrap;margin:34px 0 8px}
+  .vcard{
+    flex:1 1 200px;border:1px solid var(--line-inv);border-radius:10px;
+    padding:18px 18px 16px;background:var(--ink2)
+  }
+  .vcard .tag{
+    font-family:"SF Mono","Fira Code",monospace;font-size:11px;letter-spacing:.06em;
+    font-weight:600;margin-bottom:8px
+  }
+  .vcard.more .tag{color:var(--green)}
+  .vcard.less .tag{color:var(--red)}
+  .vcard.same .tag{color:#c9cdd6}
+  .vcard .vd{font-size:.86rem;color:#9aa1ae;line-height:1.55}
+  .vcard .vd b{color:#e6e8ec;font-weight:600}
+
+  .nullres{text-align:center;margin:64px 0 8px}
+  .nullres .r{
+    font-family:"SF Mono","Fira Code",monospace;
+    font-size:clamp(2rem,6vw,3.6rem);font-weight:600;letter-spacing:-.02em;color:#fff
+  }
+  .nullres .verdict{
+    font-size:clamp(1.1rem,2.4vw,1.4rem);font-weight:600;color:var(--green);margin-top:10px
+  }
+  .nullres .why{font-size:0.9rem;color:#8b919e;max-width:540px;margin:14px auto 0;line-height:1.65}
+
+  /* ================= LIGHT BANDS ================= */
+  .band{padding:88px 24px}
+  .band+.band{padding-top:0}
+
+  .house-meta{font-size:0.85rem;color:var(--txt-dim);letter-spacing:.02em;margin-bottom:28px}
+  .ladder{border-top:1px solid var(--line);margin-bottom:26px}
+  .rung{
+    display:flex;justify-content:space-between;align-items:baseline;gap:18px;
+    padding:18px 0;border-bottom:1px solid var(--line);flex-wrap:wrap
+  }
+  .rung .what{font-size:0.92rem;color:#3c414c;max-width:420px;line-height:1.5}
+  .rung .amt{font-size:clamp(1.5rem,3.4vw,2.2rem);font-weight:650;letter-spacing:-.03em;white-space:nowrap}
+  .amt.claimed{color:var(--red)}
+  .amt.market{color:var(--green)}
+  .amt.gap{color:#111}
+  .punch{
+    font-size:clamp(1.2rem,2.6vw,1.6rem);font-weight:600;letter-spacing:-.015em;
+    line-height:1.4;color:#111;margin:30px 0 10px
+  }
+  .punch .accent{color:var(--red)}
+  .multiply{
+    font-size:clamp(1.6rem,4vw,2.6rem);font-weight:700;letter-spacing:-.03em;
+    color:#111;margin-top:56px
+  }
+
+  pre{
+    background:#f1eee8;border:1px solid var(--line);border-radius:6px;
+    padding:18px 20px;overflow-x:auto;margin:24px 0;
+    font-family:"SF Mono","Fira Code",monospace;
+    font-size:0.8rem;color:#444;line-height:1.65
+  }
+  pre .hl{color:#1a6dd4}
+  pre .cm{color:#9a938a;font-style:italic}
+  pre .dim{color:#666}
+
+  .diagram{margin:32px 0;background:#f3f0ea;border-radius:8px;padding:26px;border:1px solid var(--line)}
+  .diagram svg{width:100%;height:auto;display:block}
+
+  figure{margin:44px auto;line-height:0}
+  figure img{width:100%;height:auto;display:block;border-radius:6px}
+  figcaption{
+    font-size:0.78rem;color:#8a8578;line-height:1.55;padding-top:10px;max-width:640px
+  }
+  figcaption strong{color:#5c574c;font-weight:600}
+  .band figure img{border:1px solid var(--line)}
+
+  .clist{margin:26px 0;font-size:0.92rem;line-height:2}
+  .clist .c{display:inline;margin-right:16px;white-space:nowrap;font-weight:500}
+  .clist .live{color:#188a4b}
+  .clist .part{color:#8a6d00}
+  .clist .dead{color:#a06020}
+  .clist .sep{color:#cfc9bd;margin:0 4px}
+
+  .footer{
+    background:var(--ink);color:#6b7280;
+    padding:36px 24px;font-size:0.75rem
+  }
+  .footer .col{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .footer a{color:#9aa1ae}
+
+  @media(max-width:600px){
+    .band,.showpiece{padding-left:16px;padding-right:16px}
+    .hero{padding:92px 16px 56px}
+    .hstats{gap:28px}
+    .rung .amt{font-size:1.4rem}
+  }
+</style>
+</head>
+<body>
+
+<a class="backnav" href="../">&larr; All projects</a>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="colw inner">
+    <div class="eyebrow">Montgomery County, Pennsylvania &mdash; property-tax screening pipeline</div>
+    <div class="big">The county says this house is worth more than its neighbors.<br><span class="ok">The satellite decides</span> if the view earns it &mdash; <span class="accent">or it&rsquo;s just over-taxed.</span></div>
+    <p class="sub">The pipeline reads the county&rsquo;s own records and flags every home taxed far above what nearby sales support. Then it turns to high-resolution aerial imagery and <strong>measures the view itself</strong> &mdash; casting sightlines from each home until they hit a neighbor&rsquo;s building &mdash; to answer the only question left: <strong>is the premium justified, or not?</strong></p>
+    <div class="hstats">
+      <div><div class="n">36</div><div class="l">directions tested per home</div></div>
+      <div><div class="n">15,036</div><div class="l">homes over-assessed &ge;10%</div></div>
+      <div><div class="n">$1.68B</div><div class="l">implied value sales can&rsquo;t find</div></div>
+    </div>
+    <div class="fine">The backdrop is the pipeline&rsquo;s own output: one tile of the county, every home&rsquo;s longest sightline drawn. Every figure on this page recomputed 2026-07-02 from the pipeline&rsquo;s canonical output.</div>
+  </div>
+</section>
+
+<!-- ================= THE VIEW, MEASURED ================= -->
+<section class="showpiece">
+  <div class="col reveal">
+    <h2>The view, measured &mdash; not eyeballed.</h2>
+    <p>A home overlooking open land may genuinely be worth more than homes of the same size and age &mdash; for a reason square footage and bedroom counts never capture. Every real-estate agent says it: <em>you&rsquo;re paying for the view</em>. Nobody measures it. This pipeline does.</p>
+    <p>Each home is anchored to its actual building using FEMA&rsquo;s nationwide building-footprint inventory, matched by street address &mdash; because grabbing the biggest footprint on the parcel finds barns, and the parcel&rsquo;s center point lands in the yard. From that anchor, rays sweep outward across the aerial imagery until each one hits a neighboring structure. Streets and empty lots don&rsquo;t block a view; only an actual building does. The farther the rays run, the more the home actually sees.</p>
+  </div>
+
+  <div class="colw reveal">
+    <figure>
+      <img src="sightline_openness.jpg" alt="Aerial tile with parcel boundaries, FEMA building footprints, and each home's longest sightline drawn and color-coded">
+      <figcaption><strong>One square of the county, every home measured.</strong> Yellow lines are parcel boundaries, red shapes are building footprints from the FEMA inventory, green-filled parcels have no building. Each dot is a home; the line leaving it is its single longest unobstructed sightline out of 36 directions tested &mdash; green when the view runs long, red when a neighbor&rsquo;s structure cuts it short. The blue ring marks the home under review.</figcaption>
+    </figure>
+  </div>
+
+  <div class="col reveal">
+    <figure>
+      <img src="sightline_crop.jpg" alt="Cropped sightline view centered on one home, its longest ray crossing an undeveloped parcel">
+      <figcaption><strong>Zoomed to one home.</strong> Its longest sightline crosses an undeveloped parcel before anything stops it. This is the raw measurement behind the color-coding above.</figcaption>
+    </figure>
+  </div>
+
+  <div class="colw reveal">
+    <figure>
+      <img src="view_comparison_grid.jpg" alt="Grid comparing three flagged homes against their comparable sales, view distance measured in four compass directions">
+      <figcaption><strong>The verdict view: flagged homes against their own comps.</strong> Each row is one candidate (blue border) beside three of its comparable sales (gray). Every tile is centered on the dwelling with its view measured in the four compass directions &mdash; green legs run clear, red legs stop short. In production the openness score is the farthest clear distance of the four. The top row is the money pattern: a home on open land, comps boxed in on every side.</figcaption>
+    </figure>
+  </div>
+
+  <div class="col reveal">
+    <p>Then the comparison that answers the question. A flagged home&rsquo;s openness is set against the average of its own comparable sales &mdash; beat it by <b style="color:#e6e8ec">15% or more</b> and the premium has a defense:</p>
+    <div class="verdicts">
+      <div class="vcard more"><div class="tag">MORE_OPEN</div><div class="vd">The home genuinely sees farther than its comps. <b>The premium may be view-justified</b> &mdash; the appeal case weakens, and the screener says so instead of overpromising.</div></div>
+      <div class="vcard less"><div class="tag">LESS_OPEN</div><div class="vd">The home sees <b>less</b> than the sales it&rsquo;s being compared to. The price premium has no view to hide behind &mdash; the over-assessment stands naked.</div></div>
+      <div class="vcard same"><div class="tag">SIMILAR</div><div class="vd">Same outlook as its comps. Whatever the county thinks it&rsquo;s taxing, <b>it isn&rsquo;t a view</b> &mdash; the gap is unexplained and the candidate stays strong.</div></div>
+    </div>
+  </div>
+
+  <div class="col reveal">
+    <div class="nullres">
+      <div class="r">r &asymp; 0.06&ensp;&middot;&ensp;p &asymp; 0.15</div>
+      <div class="verdict">A judge, not a detector &mdash; on purpose.</div>
+      <p class="why">Tested county-wide, openness does <em>not</em> predict which homes get over-assessed &mdash; no relationship. So the view score is never used to hunt candidates; it&rsquo;s used to <em>judge</em> them, one home at a time, exactly as shown above. Publishing the null is the point: the &ldquo;it&rsquo;s just the view&rdquo; excuse has been measured, and it only saves the homes that actually have one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ONE HOUSE ================= -->
+<section class="band">
+  <div class="col reveal">
+    <h2>Start with one house.</h2>
+    <div class="house-meta">2,892 sq ft &middot; 4 bed &middot; 2 bath &middot; ZIP 19027, Montgomery County</div>
+
+    <div class="ladder">
+      <div class="rung">
+        <div class="what">The county&rsquo;s tax assessment for this home</div>
+        <div class="amt">$260,650</div>
+      </div>
+      <div class="rung">
+        <div class="what">What that assessment <em>means</em>: Pennsylvania publishes each county&rsquo;s conversion rate &mdash; in Montgomery, assessments are 30.76% of market value. Divide, and the county is claiming this house is worth&hellip;</div>
+        <div class="amt claimed">$847,367</div>
+      </div>
+      <div class="rung">
+        <div class="what">What six actual sales of similar homes &mdash; all within 0.73 miles &mdash; say it&rsquo;s worth</div>
+        <div class="amt market">$553,953</div>
+      </div>
+      <div class="rung">
+        <div class="what">The gap: value being taxed that the market can&rsquo;t find &mdash; 34.6% of the county&rsquo;s claim</div>
+        <div class="amt gap">$293,414</div>
+      </div>
+    </div>
+
+    <p class="punch">This owner hands the county roughly <span class="accent">$4,000 a year</span> in tax on house that recent sales say isn&rsquo;t there.</p>
+    <p class="fine">Exact: $4,041/yr at 44.8 mills &mdash; the median combined rate across the county&rsquo;s 62 municipalities. The owner&rsquo;s true rate depends on their township and school district.</p>
+
+    <div class="multiply reveal">Now multiply by 15,036.</div>
+  </div>
+</section>
+
+<!-- ================= HOW ================= -->
+<section class="band">
+  <div class="col reveal">
+    <h2>The county publishes everything needed to catch this.</h2>
+    <p>No leaks, no records requests. Three public sources: the county&rsquo;s own GIS service (every parcel&rsquo;s size, bedrooms, bathrooms, assessment, and location), Redfin&rsquo;s sold listings (what real buyers just paid, ZIP by ZIP), and the state&rsquo;s published Common Level Ratio &mdash; the 30.76% conversion rate that turns any assessment into the market value the county is implicitly claiming. An assessment of $150,000 is the county saying &ldquo;this home is worth about $488,000.&rdquo; Almost nobody reads it that way. The pipeline does.</p>
+    <p>For each of the county&rsquo;s residential parcels it hunts for genuinely comparable sales &mdash; within one mile, within &plusmn;20% of the home&rsquo;s living area, within one bedroom and one bathroom, sold in the last 24 months. Homes without enough qualifying sales are dropped rather than guessed at; every flagged home rests on four to six real transactions. Average the comps&rsquo; price per square foot, apply it to the subject&rsquo;s square footage, and compare against the county&rsquo;s implied value. A gap of 10% or more makes the home an appeal candidate &mdash; 38,266 homes showed some gap; 15,036 cleared the 10% bar.</p>
+
+    <div class="diagram reveal">
+      <svg viewBox="0 0 700 130" fill="none">
+        <rect x="10" y="10" width="200" height="110" rx="4" fill="#faf8f4" stroke="#ddd8ce" stroke-width="1"/>
+        <text x="110" y="40" text-anchor="middle" font-size="12" font-weight="600" fill="#333">1. Pull every home</text>
+        <text x="110" y="58" text-anchor="middle" font-size="10" fill="#999">county ArcGIS query</text>
+        <text x="110" y="78" text-anchor="middle" font-size="10" fill="#666">sqft &middot; beds &middot; baths</text>
+        <text x="110" y="93" text-anchor="middle" font-size="10" fill="#666">assessment &middot; location</text>
+        <text x="110" y="110" text-anchor="middle" font-size="10" fill="#999">all residential parcels</text>
+
+        <line x1="220" y1="65" x2="250" y2="65" stroke="#c9c3b8" stroke-width="1.5"/>
+        <polygon points="248,60 258,65 248,70" fill="#b5afa4"/>
+
+        <rect x="260" y="10" width="200" height="110" rx="4" fill="#faf8f4" stroke="#ddd8ce" stroke-width="1"/>
+        <text x="360" y="40" text-anchor="middle" font-size="12" font-weight="600" fill="#333">2. Match comps</text>
+        <text x="360" y="58" text-anchor="middle" font-size="10" fill="#999">Redfin sold data</text>
+        <text x="360" y="78" text-anchor="middle" font-size="10" fill="#666">&le;1 mi &middot; &plusmn;20% sqft</text>
+        <text x="360" y="93" text-anchor="middle" font-size="10" fill="#666">&plusmn;1 bed &middot; &plusmn;1 bath &middot; &le;24 mo</text>
+        <text x="360" y="110" text-anchor="middle" font-size="10" fill="#999">best 4&ndash;6 sales kept</text>
+
+        <line x1="470" y1="65" x2="500" y2="65" stroke="#c9c3b8" stroke-width="1.5"/>
+        <polygon points="498,60 508,65 498,70" fill="#b5afa4"/>
+
+        <rect x="510" y="10" width="180" height="110" rx="4" fill="#faf8f4" stroke="#ddd8ce" stroke-width="1"/>
+        <text x="600" y="40" text-anchor="middle" font-size="12" font-weight="600" fill="#333">3. Flag gaps</text>
+        <text x="600" y="58" text-anchor="middle" font-size="10" fill="#999">implied value vs comp value</text>
+        <text x="600" y="78" text-anchor="middle" font-size="10" fill="#666">gap &ge;10% &rarr; candidate</text>
+        <text x="600" y="93" text-anchor="middle" font-size="10" fill="#666">ranked by $ at stake</text>
+        <text x="600" y="110" text-anchor="middle" font-size="10" fill="#999">38,266 flagged &middot; 15,036 candidates</text>
+      </svg>
+    </div>
+
+    <p>Recency gets the biggest weight in the comp-ranking score on purpose: a sale from three months ago most of a mile away says more about today&rsquo;s market than a next-door sale from eighteen months ago. Distance still matters &mdash; it&rsquo;s just enforced as a hard one-mile limit rather than used as the main ranking signal.</p>
+
+    <pre class="reveal"><span class="cm"># How comparable sales are ranked (best 4&ndash;6 kept per home):</span>
+score = <span class="hl">0.45</span> &middot; recency + <span class="hl">0.30</span> &middot; size match
+      + <span class="hl">0.15</span> &middot; bed/bath match + <span class="hl">0.10</span> &middot; distance
+
+<span class="cm"># Hard gates &mdash; fail any one and the sale is out:</span>
+<span class="dim">within 1.0 mi  |  living area within &plusmn;20%  |  beds within &plusmn;1</span>
+<span class="dim">baths within &plusmn;1.0  |  sold within the last 24 months</span></pre>
+  </div>
+
+  <div class="colw reveal">
+    <figure>
+      <img src="appeal-manager-map.jpg" alt="Appeal Manager desktop app: ranked candidate list, comparable-sales table, and a satellite map pinning each comp with its distance">
+      <figcaption><strong>The output isn&rsquo;t a spreadsheet &mdash; it&rsquo;s Appeal Manager</strong>, the desktop review app the screening data feeds (a later build of this project, expanded to seven counties on recorded-deed sales). Open any flagged home: the county&rsquo;s implied value sits next to what comparable homes actually sold for, each sale pinned on the satellite map with its distance, and the bottom line in plain English &mdash; what the county claims, what the market says, and the tax an appeal would save.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ================= COUNTIES ================= -->
+<section class="band" style="padding-top:88px">
+  <div class="col reveal">
+    <h2>One function per county.</h2>
+    <p>The whole method hangs on one thing: the county&rsquo;s public GIS has to publish each home&rsquo;s living area, because price per square foot is the yardstick. So before writing any code for a new county, I probe its GIS endpoint for a square-footage field under the names counties actually use (<code>SFLA</code>, <code>SQFT_LIVING_AREA</code>, <code>FINISHEDLIVINGAREA</code>, &hellip;). No field, no method &mdash; the county is marked blocked at the gate, with the reason recorded, instead of half-built.</p>
+
+    <div class="clist">
+      <span class="c live">Montgomery</span><span class="sep">&middot;</span>
+      <span class="c live">Northampton</span><span class="sep">&middot;</span>
+      <span class="c live">Allegheny</span><span class="sep">&mdash;</span>
+      <span class="c part">Lehigh</span><span class="sep">&mdash;</span>
+      <span class="c dead">Chester</span><span class="sep">&middot;</span>
+      <span class="c dead">Lancaster</span><span class="sep">&middot;</span>
+      <span class="c dead">Berks</span><span class="sep">&middot;</span>
+      <span class="c dead">Luzerne</span><span class="sep">&middot;</span>
+      <span class="c dead">Bucks</span><span class="sep">&middot;</span>
+      <span class="c dead">Lebanon</span><span class="sep">&middot;</span>
+      <span class="c dead">Delaware</span>
+    </div>
+
+    <p class="fine" style="margin-bottom:20px">Green = buildable (living-area field confirmed in the public GIS). Amber = partial &mdash; Lehigh&rsquo;s portal sits behind a CAPTCHA, but backfilling living area from Redfin produced its first candidates. Brown = blocked: no living-area field (Chester, Lancaster, Berks, Luzerne), GIS lacks it and the assessment portal is an offline iasWorld system (Bucks), a passcode-gated portal (Lebanon), or most likely no public field (Delaware).</p>
+
+    <p>A new buildable county costs one function: the endpoint URL, its field names, and that county&rsquo;s Common Level Ratio. The comp matching and the gap math are shared. That boundary is what let the project keep growing &mdash; the current build covers seven counties, pulls its comparable sales from recorded deeds instead of a listings site, refuses to value a home against a structurally different one (a condo never gets priced off a single-family house), and ships as the Appeal Manager desktop app shown above.</p>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<div class="footer">
+  <div class="col">
+    <span><a href="../">&larr; Back to all projects</a> &middot; Montgomery County, PA &middot; 2026</span>
+    <span>Python &middot; ArcGIS REST &middot; Redfin sales data &middot; FEMA USA Structures</span>
+  </div>
+</div>
+
+<script>
+/* below-the-fold reveals; runs only when .anim was set (JS + motion OK) */
+if(document.documentElement.classList.contains('anim')){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})
+  },{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+}
+</script>
+</body>
+</html>

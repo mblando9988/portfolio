@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Michael Blando</title>
+<meta name="description" content="Michael Blando: vehicle re-identification across highway cameras, 3D reconstruction, property-tax and eminent-domain tools, and an on-device text model.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Michael Blando">
+<meta property="og:title" content="Michael Blando">
+<meta property="og:description" content="Six projects: vehicle re-identification across highway cameras, 3D reconstruction, property-tax and eminent-domain tools, and an on-device text model.">
+<meta property="og:url" content="https://mblando9988.github.io/portfolio/interactive/">
+<meta property="og:image" content="https://mblando9988.github.io/portfolio/interactive/assets/og-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Newsreader:ital,opsz,wght@0,6..72,300..500;1,6..72,300..500&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>x-dc{display:none!important}</style>
+<script src="./support.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<style>
+/* Simple / Cool switch (outside the component so the runtime leaves it alone) */
+.ds-switch{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:50;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;padding:3px;border-radius:999px;border:1px solid rgba(246,243,234,.24);background:rgba(8,8,12,.58);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-family:'Space Grotesk','Courier New',sans-serif;font-size:10.5px;font-weight:500;line-height:1;letter-spacing:.2em;text-transform:uppercase;transition:opacity .3s ease}
+.ds-switch::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:#ecc98f;transform:translateX(100%);transition:transform .24s cubic-bezier(.22,.61,.36,1)}
+.ds-switch a{position:relative;z-index:1;padding:8px 16px 8px 18px;text-align:center;color:rgba(246,243,234,.78);text-decoration:none;border-radius:999px;transition:color .24s ease}
+.ds-switch a:hover{color:#f6f3ea}
+.ds-switch a[aria-current="page"]{color:#1a1208}
+.ds-switch a:focus-visible{outline:2px solid #ecc98f;outline-offset:3px}
+.ds-switch.flip::before{transform:translateX(0)}
+.ds-switch.flip a[aria-current="page"]{color:rgba(246,243,234,.78)}
+.ds-switch.flip a:not([aria-current]){color:#1a1208}
+body:has(#detail.arming) .ds-switch,body:has(#detail.open) .ds-switch{opacity:0;pointer-events:none}
+@media (max-width:760px){.ds-switch{position:absolute;top:14px}}
+@media (prefers-reduced-motion:reduce){.ds-switch::before{transition:none}}
+</style>
+</head>
+<body>
+<div class="ds-switch" role="navigation" aria-label="Page design">
+  <a href="../">Simple</a>
+  <a href="./" aria-current="page">Cool</a>
+</div>
+<x-dc>
+<helmet>
+<style>
+  :root{
+    --black:#000; --ink:#f6f3ea; --muted:rgba(246,243,234,.58); --faint:rgba(246,243,234,.32);
+    --tan:#ecc98f; --tan-deep:#d8ad6b; --sepia:#8a6b3e;
+    --steel:#9fb6c6; --steel-deep:#6f8c9e; --red:#ff4438;
+    --display:'Bricolage Grotesque','Helvetica Neue',sans-serif;
+    --serif:'Newsreader','Times New Roman',serif;
+    --mono:'Space Grotesk','Courier New',sans-serif;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;width:100%;overflow:hidden;background:var(--black);color:var(--ink)}
+  body{font-family:var(--serif);-webkit-font-smoothing:antialiased;cursor:none}
+  .tv-root{position:fixed;inset:0}
+
+  #gl{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+  .grid{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5;
+    background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:58px 58px;-webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 45%,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse 80% 80% at 50% 45%,#000 30%,transparent 78%)}
+  .vignette{position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 72% 72% at 50% 48%,transparent 38%,rgba(0,0,0,.62) 100%)}
+  .grain{position:fixed;inset:-50%;z-index:2;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain 6s steps(6) infinite}
+  @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,1%)}80%{transform:translate(3%,2%)}100%{transform:translate(0,0)}}
+
+  header{position:fixed;top:0;left:0;right:0;z-index:7;display:flex;align-items:center;justify-content:space-between;padding:26px clamp(20px,4vw,54px);pointer-events:none}
+  .brand{font-family:var(--display);font-optical-sizing:auto;font-weight:600;font-size:20px;letter-spacing:-.01em;opacity:0;pointer-events:auto}
+  .brand b{font-style:normal;font-weight:300}
+  nav{display:flex;gap:28px;margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;pointer-events:auto}
+  nav a{color:var(--muted);text-decoration:none;transition:color .25s var(--ease);opacity:0}
+  nav a:hover{color:var(--ink)}
+
+  .sig{pointer-events:auto;display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-left:auto;text-align:right}
+  .sig-k{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--steel);text-shadow:0 1px 12px rgba(0,0,0,.85)}
+  .sig-name{font-family:var(--display);font-optical-sizing:auto;font-weight:600;font-size:19px;letter-spacing:-.01em;color:var(--ink);text-decoration:none;line-height:1.05;transition:color .25s var(--ease)}
+  .sig-name:hover{color:var(--red)}
+  .sig-mail{font-family:var(--mono);font-size:13px;letter-spacing:.06em;color:rgba(246,243,234,.85);text-decoration:none;transition:color .25s var(--ease)}
+  .sig-mail:hover{color:var(--ink)}
+
+  .world{position:fixed;inset:0;z-index:6;perspective:1020px;perspective-origin:50% 46%;display:flex;align-items:center;justify-content:center;touch-action:none}
+  .stage{position:relative;width:1px;height:1px;transform-style:preserve-3d;will-change:transform}
+  .pcard{position:absolute;width:clamp(280px,42vw,540px);left:50%;top:50%;transform-style:preserve-3d;will-change:transform;cursor:none;
+    --tz:0px;--tx:0px;--ty:0px;--ry:0deg;--rx:0deg;--lift:0px;--hs:1;
+    transform:translate(-50%,-50%) translate3d(var(--px,0px),var(--py,0px),0px) translate3d(var(--tx),var(--ty),calc(var(--tz) + var(--lift))) rotateY(var(--ry)) rotateX(var(--rx)) scale(var(--hs,1))}
+  .pc-frame{position:relative;border:none;box-shadow:none;padding:10px 16px 14px;transition:transform .4s var(--ease);opacity:0;
+    background:radial-gradient(128% 116% at 50% 40%,rgba(3,3,8,.66) 0%,rgba(3,3,8,.42) 44%,rgba(3,3,8,.14) 70%,transparent 85%)}
+  .pc-frame::after{content:"";position:absolute;inset:0;border:1px solid var(--red);border-radius:13px;opacity:0;pointer-events:none;transition:opacity .3s var(--ease)}
+  .pcard.is-hover .pc-frame::after{animation:cardpulse 1.5s ease-in-out infinite}
+  @keyframes cardpulse{0%,100%{opacity:.32}50%{opacity:.85}}
+  .pcard.is-hover .pc-photo{border-color:var(--tan-deep);box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 34px rgba(216,176,116,.16)}
+  .pc-float{transform-style:preserve-3d;animation:floaty 7s ease-in-out infinite;will-change:transform}
+  .pcard:nth-of-type(2) .pc-float{animation-duration:8.6s;animation-delay:-2.3s}
+  @keyframes floaty{0%,100%{transform:translate3d(0,0,0) rotateZ(0deg)}50%{transform:translate3d(0,-13px,0) rotateZ(.5deg)}}
+  #card-reid{width:clamp(190px,21vw,330px);--tx:-27vw;--ty:-190px;--tz:-120px;--ry:-8deg;--rx:-4deg}
+  .pcard.slot{width:clamp(190px,21vw,330px)}
+  .pcard[data-proj="p2"]{--tx:30vw;--ty:-225px;--tz:-120px;--ry:16deg;--rx:-4deg}
+  .pcard[data-proj="p3"]{--tx:31vw;--ty:275px;--tz:-300px;--ry:20deg;--rx:3deg}
+  .pcard[data-proj="p4"]{--tx:-32vw;--ty:290px;--tz:-300px;--ry:20deg;--rx:3deg}
+  .pcard.recede{transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);opacity:0!important;
+    transform:translate(-50%,-50%) translate3d(var(--tx),var(--ty),calc(var(--tz) - 400px)) rotateY(var(--ry)) rotateX(var(--rx)) scale(.9)!important}
+  .pcard.diving{transition:transform .82s cubic-bezier(.5,0,.78,1),opacity .5s ease-in .42s;transform:translate(-50%,-50%) translate3d(0px,0px,660px) rotateY(0deg) rotateX(0deg)!important;opacity:0!important;z-index:18;pointer-events:none}
+  .pc-kick{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;color:var(--steel);text-shadow:0 1px 12px rgba(0,0,0,.85)}
+  .pc-title{font-family:var(--display);font-optical-sizing:auto;font-weight:360;font-size:clamp(1.55rem,2.8vw,2.4rem);line-height:1;letter-spacing:-.014em;margin:9px 0 14px;color:#f5eede;text-shadow:0 2px 26px rgba(0,0,0,.78),0 1px 4px rgba(0,0,0,.7)}
+  .pc-title em{font-weight:600;color:var(--tan)}
+  .pc-photo{position:relative;border-radius:10px;overflow:hidden;background:#0a0a10;border:1px solid rgba(255,255,255,.12);aspect-ratio:728/348;box-shadow:0 34px 74px rgba(0,0,0,.55),0 4px 14px rgba(0,0,0,.45);transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
+  .pc-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .pc-snip{margin:14px 2px 0;font-size:clamp(.95rem,1.25vw,1.08rem);line-height:1.52;color:rgba(247,244,236,.82);text-wrap:pretty;text-shadow:0 1px 16px rgba(0,0,0,.85),0 1px 3px rgba(0,0,0,.7)}
+  .pc-open{margin:15px 2px 2px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:rgba(247,244,236,.92);display:inline-flex;align-items:center;gap:8px;transition:color .3s var(--ease),border-color .3s var(--ease),background .3s var(--ease);text-shadow:0 1px 10px rgba(0,0,0,.8);border:1px solid rgba(246,243,234,.42);background:rgba(246,243,234,.06);padding:8px 14px;border-radius:999px}
+  .pcard.is-hover .pc-open{color:var(--tan);border-color:var(--red)}
+  .pc-photo.empty{display:flex;align-items:center;justify-content:center;color:var(--faint);border-style:dashed;box-shadow:none}
+  .pc-photo.empty .pl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+
+  .whint{position:fixed;left:0;right:0;bottom:26px;z-index:7;text-align:center;pointer-events:none;font-family:var(--mono);font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--faint);opacity:0}
+
+  .detail{position:fixed;inset:0;z-index:20;display:none;pointer-events:none}
+  .detail.arming,.detail.open{display:block;pointer-events:auto}
+  .detail .scrim{position:absolute;inset:0;opacity:0;background:rgba(5,5,8,.74);transition:opacity .6s cubic-bezier(.16,1,.3,1)}
+  .detail.open .scrim{opacity:1;-webkit-backdrop-filter:blur(22px) saturate(1.2);backdrop-filter:blur(22px) saturate(1.2)}
+  /* FLIP zoom: sheet starts pinned to the clicked card's rect (--fx/--fy/--fs), grows to fullscreen on .open */
+  .detail .sheet{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;opacity:0;transform-origin:0 0;transform:translate(var(--fx,0px),var(--fy,0px)) scale(var(--fs,.3));transition:opacity .5s cubic-bezier(.16,1,.3,1),transform .72s cubic-bezier(.16,1,.3,1)}
+  .detail.open .sheet{opacity:1;transform:translate(0px,0px) scale(1)}
+  .detail .wrap{max-width:1060px;margin:0 auto;padding:clamp(64px,9vh,120px) clamp(22px,6vw,80px) 13vh}
+  .dview{display:none}
+  .dclose{position:fixed;top:22px;right:22px;z-index:22;display:inline-flex;align-items:center;gap:9px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.24);color:var(--ink);font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:11px 18px;border-radius:999px;cursor:none;transition:background .25s var(--ease),border-color .25s var(--ease)}
+  .dclose:hover{background:var(--tan);color:#1a1208;border-color:var(--tan)}
+  .dkick{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:var(--steel)}
+  .dtitle{font-family:var(--display);font-optical-sizing:auto;font-weight:350;font-size:clamp(2.6rem,6.4vw,5rem);line-height:.98;letter-spacing:-.02em;margin:12px 0 0;color:#f6efe0}
+  .dtitle em{font-weight:600;color:var(--tan)}
+  .dthesis{max-width:46rem;margin:22px 0 0;font-size:clamp(1.05rem,1.5vw,1.3rem);line-height:1.55;color:var(--muted)}
+  .pspec{margin:26px 0 0;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tan);display:flex;flex-wrap:wrap;gap:8px 24px}
+  .method{display:grid;grid-template-columns:repeat(3,1fr);margin:44px 0 0;border:1px solid rgba(255,255,255,.09);border-radius:11px;overflow:hidden}
+  .method .step{padding:24px;border-right:1px solid rgba(255,255,255,.08);background:rgba(8,8,14,.6)}
+  .method .step:last-child{border-right:none}
+  .method .step .n{font-family:var(--mono);font-size:11px;letter-spacing:.2em;color:var(--tan-deep)}
+  .method .step .st{font-family:var(--display);font-weight:500;font-size:1.28rem;margin:10px 0 8px;letter-spacing:-.012em;color:var(--ink)}
+  .method .step .sd{font-family:var(--mono);font-size:11px;letter-spacing:.04em;line-height:1.65;color:var(--muted)}
+  .dnote{margin:30px 0 0;font-family:var(--mono);font-size:11px;letter-spacing:.04em;line-height:1.7;color:var(--faint)}
+  .soon{margin:40px 0 0;font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .dpara{max-width:46rem;margin:18px 0 0;font-size:clamp(1rem,1.25vw,1.12rem);line-height:1.6;color:rgba(247,244,236,.8);text-wrap:pretty}
+  .dghead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin:54px 0 0;border-top:1px solid rgba(255,255,255,.08);padding-top:22px}
+  .dghead .t{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+  .dghead .s{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  /* featured match */
+  .feat{display:flex;align-items:stretch;gap:14px;margin:22px 0 0}
+  .featpanel{position:relative;flex:1 1 0;min-width:0;border:1px solid rgba(255,255,255,.13);border-radius:10px;overflow:hidden;background:#0b0b11}
+  .featpanel img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center;filter:contrast(1.08) brightness(1.06) saturate(1.08)}
+  .featpanel .plabel{position:absolute;left:0;right:0;bottom:0;padding:18px 12px 9px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,243,234,.8);background:linear-gradient(to top,rgba(0,0,0,.85),transparent)}
+  .featpanel .plabel b{color:var(--steel);font-weight:600}
+  .featlink{flex:0 0 128px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
+  .featlink .ar{width:70%;height:1px;background:linear-gradient(90deg,transparent,var(--tan-deep),transparent);margin:0 0 12px}
+  .featlink .lb{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+  .featlink .sim{font-family:var(--display);font-size:2.7rem;line-height:1.05;color:var(--tan);font-weight:400}
+  .featlink .dt{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  .featcap{max-width:44rem;margin:16px 0 0;font-size:1.04rem;line-height:1.55;color:rgba(247,244,236,.82);text-wrap:pretty}
+  .featcap em{font-style:italic;color:var(--tan)}
+  .trail{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 0}
+  .tcell{position:relative;border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:#0b0b11;transition:border-color .25s var(--ease)}
+  .tcell:hover{border-color:var(--tan-deep)}
+  .tcell img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 58%;filter:contrast(1.08) brightness(1.07) saturate(1.1)}
+  .montage{margin:18px 0 0;border:1px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden;background:#0b0b11;box-shadow:0 22px 50px rgba(0,0,0,.5)}
+  .montage img{display:block;width:100%;height:auto}
+  .mcapt{margin:12px 0 0;font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;line-height:1.6;color:var(--faint)}
+  .mcapt b{color:var(--steel);font-weight:600}
+  .geo{position:relative;margin:20px 0 0;border:1px solid rgba(255,255,255,.12);border-radius:12px;overflow:hidden;background:#0b0b11;box-shadow:0 30px 70px rgba(0,0,0,.55)}
+  .geo img{display:block;width:100%;height:auto}
+  .geo::after{content:"";position:absolute;top:0;right:0;width:56%;height:50%;pointer-events:none;background:radial-gradient(125% 125% at 100% 0,rgba(8,10,16,.95),rgba(8,10,16,.5) 40%,transparent 66%)}
+  .geohud{position:absolute;top:14px;right:16px;z-index:2;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(246,243,234,.92);background:rgba(0,0,0,.46);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:7px 13px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  .gdot{width:7px;height:7px;border-radius:50%;background:var(--tan);box-shadow:0 0 9px rgba(236,201,143,.85);animation:gblink 2s ease-in-out infinite}
+  @keyframes gblink{0%,100%{opacity:1}50%{opacity:.4}}
+  /* perf: skip painting/animating heavy detail blocks while they're scrolled off-screen (the reid page is long) */
+  .ngraph{content-visibility:auto;contain-intrinsic-size:1400px}
+  .method{content-visibility:auto;contain-intrinsic-size:240px}
+  .feat{content-visibility:auto;contain-intrinsic-size:360px}
+  .trail{content-visibility:auto;contain-intrinsic-size:260px}
+  .mgrid{content-visibility:auto;contain-intrinsic-size:520px}
+  /* more-matches grid */
+  .mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:12px;margin:20px 0 0}
+  .mtile{border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden;background:#0b0b11;transition:border-color .25s var(--ease)}
+  .mtile:hover{border-color:var(--tan-deep)}
+  .mrow{display:flex;gap:2px}
+  .mcell{position:relative;flex:1 1 0;min-width:0}
+  .mcell img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;filter:contrast(1.08) brightness(1.05) saturate(1.06)}
+  .mcell .ab{position:absolute;top:5px;left:5px;width:15px;height:15px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:8px;font-weight:600;color:var(--ink);background:rgba(0,0,0,.62);border:1px solid rgba(255,255,255,.28);border-radius:3px}
+  .mcap{display:flex;justify-content:space-between;align-items:center;gap:6px;padding:7px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);white-space:nowrap;border-top:1px solid rgba(255,255,255,.06)}
+  .mcap .ix{color:var(--steel)}
+  .mcap b{color:var(--tan);font-weight:600}
+  .marrow{flex:0 0 14px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:11px;color:var(--tan-deep)}
+  .fcell{border-left:1px solid rgba(236,201,143,.4)}
+  .fcell img{filter:none;object-fit:contain;background:#0a0a0d}
+  .fcell image-slot{display:block;width:100%;aspect-ratio:1/1;border:1px dashed rgba(236,201,143,.28);background:rgba(255,255,255,.015);border-radius:0}
+  .bprow{margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.07)}
+  .bprow .bplab{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--tan-deep);margin:0 0 8px}
+  .bprow .bplab::before{content:"";flex:0 0 5px;height:5px;border-radius:50%;background:var(--tan-deep)}
+  .bprow image-slot{display:block;width:100%;height:112px;border:1px dashed rgba(236,201,143,.32);border-radius:7px;background:rgba(255,255,255,.018)}
+  .fcell .flabel{position:absolute;top:5px;left:5px;font-family:var(--mono);font-size:7.5px;font-weight:600;letter-spacing:.03em;line-height:1.2;text-transform:uppercase;color:var(--tan);text-shadow:0 1px 4px rgba(0,0,0,.95)}
+  /* node-graph: each match wired to a blueprint */
+  .ngraph{display:flex;flex-direction:column;gap:18px;margin:20px 0 0}
+  .nrow{display:flex;align-items:center;gap:0}
+  .ncard{flex:0 0 340px;width:340px;border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden;background:#0b0b11;transition:border-color .25s var(--ease)}
+  .ncard:hover{border-color:var(--tan-deep)}
+  .nwire{flex:1 1 auto;position:relative;align-self:center;height:22px;min-width:46px}
+  .nwire .line{position:absolute;top:50%;left:2px;right:2px;height:2px;transform:translateY(-50%);background:linear-gradient(90deg,var(--tan),rgba(236,201,143,.3));border-radius:2px;box-shadow:0 0 9px rgba(236,201,143,.3)}
+  .nwire .line::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 6px,rgba(255,255,255,.55) 6px,rgba(255,255,255,.55) 8px);opacity:.4;animation:nflow 1.2s linear infinite}
+  .nwire .pout,.nwire .pin{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;transform:translate(-50%,-50%);z-index:2}
+  .nwire .pout{left:0;background:var(--tan);box-shadow:0 0 8px var(--tan)}
+  .nwire .pin{left:100%;background:#0b0b11;border:2px solid var(--tan)}
+  .nbp{flex:0 0 190px;width:190px}
+  .nbp .bphead{display:flex;justify-content:space-between;align-items:baseline;gap:6px;margin:0 0 6px}
+  .nbp .bpmm{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.01em;color:var(--ink)}
+  .nbp .bpyr{font-family:var(--mono);font-size:9px;color:var(--tan);flex:0 0 auto}
+  .nbp .bpframe{position:relative;border:1px solid rgba(236,201,143,.3);border-radius:7px;overflow:hidden;background:#0b0b11;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+  .nbp .bpframe img{width:100%;height:100%;object-fit:contain;display:block}
+  .nbp .bpscore{display:flex;align-items:center;gap:7px;margin:7px 0 0;font-family:var(--mono);font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .nbp .bpscore b{color:var(--tan);font-weight:600}
+  .nbp .bpscore .bar{flex:1 1 auto;height:3px;border-radius:2px;background:rgba(255,255,255,.08);overflow:hidden}
+  .nbp .bpscore .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--tan-deep),var(--tan))}
+  .specrow{display:flex;flex-wrap:wrap;gap:7px;margin:13px 0 0}
+  .spec{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--tan-deep);border:1px solid rgba(236,201,143,.28);border-radius:20px;padding:4px 10px}
+  .tells{display:grid;grid-template-columns:1fr 1fr;gap:0 40px;margin:18px 0 0;max-width:640px}
+  .tell{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+  .tell .tn{font-family:var(--mono);font-size:13px;letter-spacing:.01em;color:var(--ink)}
+  .tell .tf{font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--faint)}
+  .flow{position:relative;margin:22px 0 4px}
+  .flow .fline{position:absolute;left:10%;right:10%;top:6px;height:1px;background:rgba(255,255,255,.13)}
+  .flow .ffill{position:absolute;left:10%;width:80%;top:6px;height:1px;background:var(--tan);opacity:.5;box-shadow:0 0 8px rgba(236,201,143,.3)}
+  .flow .frow{position:relative;display:grid;grid-template-columns:repeat(5,1fr)}
+  .flow .fstep{text-align:center;padding:0 6px}
+  .flow .fdot{display:block;width:11px;height:11px;border-radius:50%;margin:0 auto;background:var(--black);border:1.5px solid var(--tan)}
+  .flow .fstep.last .fdot{width:14px;height:14px;background:var(--tan);box-shadow:0 0 12px rgba(236,201,143,.4)}
+  .flow .fn{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--tan);margin:16px 0 0}
+  .flow .ft{font-family:var(--display);font-weight:500;font-size:15px;color:var(--ink);margin:7px 0 4px;letter-spacing:-.01em}
+  .flow .fstep.last .ft{color:var(--tan)}
+  .flow .fd{font-family:var(--mono);font-size:10.5px;line-height:1.45;color:var(--faint)}
+  @media(max-width:640px){.tells{grid-template-columns:1fr}.flow .fd{display:none}.flow .ft{font-size:13px}}
+  /* similarity verifier: tokenize / vectorize / cosine */
+  .verify{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);margin:22px 0 0;border:1px solid rgba(255,255,255,.1);border-radius:11px;overflow:hidden;background:#0b0b11;box-shadow:0 22px 50px rgba(0,0,0,.45)}
+  .verify .vembed{padding:22px 24px;border-right:1px solid rgba(255,255,255,.08)}
+  .verify .vcompare{padding:22px 24px;background:rgba(7,7,12,.55)}
+  .vlab{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .vclaim{font-family:var(--display);font-weight:400;font-size:1.32rem;letter-spacing:-.01em;color:var(--tan);margin:10px 0 0}
+  .vclaim::before{content:"\201C"}
+  .vclaim::after{content:"\201D"}
+  .vstep{display:flex;align-items:center;gap:12px;margin:18px 0 0}
+  .vstep .vk{flex:0 0 56px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--tan-deep)}
+  .tok{display:flex;flex-wrap:wrap;gap:5px}
+  .tk{font-family:var(--mono);font-size:11px;color:var(--ink);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:4px;padding:3px 7px}
+  .vec{flex:1 1 auto;display:flex;align-items:flex-end;gap:2px;height:30px}
+  .vec i{flex:1 1 0;min-width:2px;border-radius:1px;background:linear-gradient(to top,var(--tan-deep),var(--tan));opacity:.82}
+  .vmeta{font-family:var(--mono);font-size:9px;letter-spacing:.05em;color:var(--faint);margin:13px 0 0}
+  .simlist{display:flex;flex-direction:column;gap:11px;margin:14px 0 0}
+  .simrow{display:grid;grid-template-columns:1fr 80px 30px;align-items:center;gap:12px}
+  .simrow .snm{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .simrow .snm i{font-style:normal;color:var(--faint);margin-left:8px}
+  .simrow .bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+  .simrow .bar span{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--sepia),var(--tan-deep))}
+  .simrow .score{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:right}
+  .verdict{display:flex;align-items:baseline;gap:11px;margin:17px 0 0;font-family:var(--mono);font-size:10.5px;line-height:1.5;letter-spacing:.02em;color:var(--muted)}
+  .verdict .vd{flex:0 0 auto;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
+  .verdict.bad .vd{color:#1a1208;background:var(--tan)}
+  .vcontrast{display:flex;align-items:center;gap:13px;flex-wrap:nowrap;margin:13px 0 0;padding:13px 17px;border:1px solid rgba(159,182,198,.22);border-radius:9px;background:rgba(159,182,198,.05)}
+  .vcontrast .vc-tag{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--steel);border:1px solid rgba(159,182,198,.45);border-radius:20px;padding:3px 9px}
+  .vcontrast .vc-claim{font-family:var(--display);font-size:1.06rem;color:var(--ink);white-space:nowrap}
+  .vcontrast .vc-claim::before{content:"\201C"}
+  .vcontrast .vc-claim::after{content:"\201D"}
+  .vcontrast .vc-tool{font-family:var(--mono);font-size:10px;color:var(--muted)}
+  .vcontrast .vc-right{margin-left:auto;display:flex;align-items:center;gap:12px;flex:0 0 auto}
+  .vcontrast .vc-bar{flex:0 0 64px;height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden}
+  .vcontrast .vc-bar span{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--steel-deep),var(--steel))}
+  .vcontrast .vc-score{font-family:var(--mono);font-size:11px;color:var(--steel)}
+  .toolsig{margin:18px 0 0;border:1px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden;background:#0b0b11}
+  .tsig{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.06);font-family:var(--mono);font-size:12.5px}
+  .tsig:last-child{border-bottom:none}
+  .tsig .fn{color:var(--tan);font-weight:600}
+  .tsig .sg{color:var(--muted)}
+  .tsig .ar{color:var(--tan-deep)}
+  .tsig .rt{color:var(--steel);margin-left:auto}
+  @media(max-width:640px){.verify{grid-template-columns:1fr}.verify .vembed{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)}.vcontrast{flex-wrap:wrap}.vcontrast .vc-right{margin-left:0}}
+  /* verifier polish: threshold tick + live sweep + grow-in */
+  .simrow .bar{position:relative}
+  .simrow .bar::after{content:"";position:absolute;top:-3px;bottom:-3px;left:35%;width:1px;background:repeating-linear-gradient(180deg,rgba(236,201,143,.6) 0 2px,transparent 2px 4px)}
+  .vthresh{font-family:var(--mono);font-size:9px;letter-spacing:.04em;color:var(--faint);margin:7px 0 0;text-align:right}
+  .vec{position:relative;overflow:hidden}
+  .vec::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(246,243,234,.16),transparent);transform:translateX(-120%);animation:vecsweep 3.6s ease-in-out 1s infinite}
+  @keyframes vecsweep{0%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+  .verify .vec i{transform-origin:bottom;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+  .verify .vec i:nth-child(even){transition-delay:.07s}
+  .verify.arm:not(.lit) .vec i{transform:scaleY(.12)}
+  .verify .simrow .bar span,.vcontrast .vc-bar span{transform-origin:left;transition:transform .9s cubic-bezier(.16,1,.3,1)}
+  .verify.arm:not(.lit) .simrow .bar span{transform:scaleX(0)}
+  .verify.lit .simrow:nth-child(2) .bar span{transition-delay:.08s}
+  .verify.lit .simrow:nth-child(3) .bar span{transition-delay:.16s}
+  .vcontrast.arm:not(.lit) .vc-bar span{transform:scaleX(0)}
+  .numgrid{position:absolute;inset:0;display:flex;background:#08080b;overflow:hidden}
+  .numgrid .ncol{flex:1 1 0;position:relative;overflow:hidden;border-right:1px solid rgba(236,201,143,.10)}
+  .numgrid .ncol:last-child{border-right:none}
+  .numgrid .ncol.hot{background:rgba(236,201,143,.09)}
+  .numgrid .nstrip{display:flex;flex-direction:column;animation-iteration-count:infinite;animation-timing-function:ease-in-out;will-change:transform}
+  .numgrid .ncol:nth-child(1) .nstrip{animation-name:nsA;animation-duration:27s;animation-delay:-6s}
+  .numgrid .ncol:nth-child(2) .nstrip{animation-name:nsB;animation-duration:34s;animation-direction:reverse;animation-delay:-12s}
+  .numgrid .ncol:nth-child(3) .nstrip{animation-name:nsC;animation-duration:23s;animation-delay:-3s}
+  .numgrid .ncol:nth-child(4) .nstrip{animation-name:nsA;animation-duration:39s;animation-direction:reverse;animation-delay:-17s}
+  .numgrid .ncol:nth-child(5) .nstrip{animation-name:nsC;animation-duration:31s;animation-delay:-9s}
+  .numgrid .ncol:nth-child(6) .nstrip{animation-name:nsB;animation-duration:21s;animation-direction:reverse;animation-delay:-5s}
+  .numgrid i{flex:0 0 34px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-style:normal;font-size:18px;font-weight:500;color:rgba(246,243,234,.42);border-bottom:1px solid rgba(255,255,255,.045)}
+  .numgrid .ncol.hot i{color:var(--tan);font-weight:600}
+  .numgrid::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(8,8,11,.94),transparent 27%,transparent 73%,rgba(8,8,11,.94))}
+  @keyframes nsA{0%{transform:translateY(0)}17%{transform:translateY(-7%)}26%{transform:translateY(-7%)}55%{transform:translateY(-29%)}64%{transform:translateY(-29%)}100%{transform:translateY(-50%)}}
+  @keyframes nsB{0%{transform:translateY(0)}30%{transform:translateY(-16%)}38%{transform:translateY(-16%)}73%{transform:translateY(-39%)}80%{transform:translateY(-39%)}100%{transform:translateY(-50%)}}
+  @keyframes nsC{0%{transform:translateY(0)}13%{transform:translateY(-5%)}21%{transform:translateY(-5%)}49%{transform:translateY(-25%)}58%{transform:translateY(-25%)}87%{transform:translateY(-46%)}100%{transform:translateY(-50%)}}
+  @media (prefers-reduced-motion:reduce){.numgrid .nstrip{animation:none}}
+  /* p3 · civic-data screener card preview (dark candidate rows) */
+  .scrgrid{position:absolute;inset:0;display:flex;flex-direction:column;background:#08080b;overflow:hidden}
+  .scrgrid .sr{flex:1 1 0;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid rgba(255,255,255,.05);min-width:0}
+  .scrgrid .sr:last-child{border-bottom:none}
+  .scrgrid .sr .sa{flex:1 1 auto;min-width:0;font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:rgba(246,243,234,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .scrgrid .sr .sa .sz{color:var(--faint);font-size:9px;letter-spacing:.06em;margin-left:7px}
+  .scrgrid .sr .sg{flex:0 0 auto;font-family:var(--display);font-size:15px;font-weight:600;color:var(--tan);letter-spacing:-.01em}
+  .scrgrid .sr .sb{flex:0 0 auto;font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.14em;padding:3px 7px;border-radius:3px;color:#fff;background:var(--red)}
+  .scrgrid::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(8,8,11,.86),transparent 24%,transparent 76%,rgba(8,8,11,.86))}
+  /* p3 · dview worked example (one home, grossed up to market) */
+  .calc{margin:18px 0 0;border:1px solid rgba(255,255,255,.1);border-radius:10px;overflow:hidden;background:#0b0b11}
+  .calc .crow{display:flex;align-items:center;gap:16px;padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .calc .crow:last-child{border-bottom:none}
+  .calc .cl{flex:0 0 168px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+  .calc .cv{flex:1 1 auto;font-family:var(--display);font-size:1.46rem;font-weight:500;color:var(--ink);letter-spacing:-.01em;line-height:1.1}
+  .calc .cv em{font-style:normal;color:var(--tan)}
+  .calc .cbar{flex:0 0 140px;height:7px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;position:relative}
+  .calc .cbar>i{position:absolute;left:0;top:0;bottom:0;background:var(--red);border-radius:4px}
+  .calc .cverdict{background:rgba(255,68,56,.12);border-top:1px solid rgba(255,68,56,.34)}
+  .calc .cverdict .cv{color:var(--tan)}
+  @media(max-width:560px){.calc .crow{flex-wrap:wrap;gap:6px 16px}.calc .cl{flex-basis:100%}.calc .cbar{flex-basis:100%;margin-top:6px}}
+  @keyframes nflow{to{background-position:8px 0}}
+  @media(max-width:720px){.nrow{flex-wrap:wrap}.ncard{flex-basis:100%;width:100%}.nwire{display:none}.nbp{flex-basis:100%;width:100%;margin-top:10px}}
+  @media(max-width:680px){.feat{flex-direction:column}.featlink{flex-basis:auto;flex-direction:row;gap:16px;padding:4px 0}.featlink .ar{display:none}}
+
+  .cur{position:fixed;z-index:60;pointer-events:none;left:0;top:0;mix-blend-mode:difference}
+  .cur .ring{position:absolute;width:34px;height:34px;border:1px solid #fff;border-radius:50%;transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),opacity .25s}
+  .cur .dot{position:absolute;width:4px;height:4px;background:#fff;border-radius:50%;transform:translate(-50%,-50%)}
+  body.hot .cur .ring{width:54px;height:54px;opacity:.7}
+  body.grab .cur .ring{width:22px;height:22px}
+
+  #curtain{position:fixed;inset:0;z-index:80;background:#000;display:flex;align-items:center;justify-content:center;transition:opacity .7s var(--ease)}
+  #curtain .lg{font-family:var(--display);font-weight:600;font-size:26px;letter-spacing:-.01em;opacity:0;color:var(--ink)}
+  #curtain .lg em{font-style:normal;font-weight:300;color:var(--tan)}
+
+  .tech-showcase{margin:54px 0 32px;perspective:1200px;width:100%}
+  .ts-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:16px}
+  .ts-label{font-family:var(--mono);font-size:11px;letter-spacing:.25em;text-transform:uppercase;color:var(--tan)}
+  .ts-desc{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted)}
+  .ts-container{position:relative;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:radial-gradient(130% 130% at 50% 0%,rgba(20,20,30,.5) 0%,rgba(5,5,9,.9) 100%);overflow:hidden;padding:clamp(30px,6vw,80px);display:flex;justify-content:center;align-items:center;box-shadow:0 40px 100px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);transform-style:preserve-3d;transition:transform .7s cubic-bezier(.16,1,.3,1),border-color .5s ease;cursor:none}
+  .ts-container:hover{transform:translateY(-4px) rotateX(3deg);border-color:rgba(236,201,143,.35)}
+  .ts-img-wrapper{position:relative;width:100%;max-width:580px;border-radius:6px;box-shadow:0 20px 60px rgba(0,0,0,.9);transform-style:preserve-3d}
+  .ts-img-raw{width:100%;display:block;image-rendering:pixelated;filter:contrast(1.08) brightness(.95);transition:filter .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1);border-radius:4px}
+  .ts-container:hover .ts-img-raw{filter:contrast(1.3) saturate(1.1) brightness(1.15);transform:scale(1.04)}
+  .ts-box{position:absolute;top:15%;right:5%;width:55%;height:75%;border:1px solid rgba(236,201,143,.7);border-radius:4px;box-shadow:0 0 40px rgba(236,201,143,.2),inset 0 0 20px rgba(236,201,143,.08);-webkit-backdrop-filter:blur(5px) saturate(1.2);backdrop-filter:blur(5px) saturate(1.2);pointer-events:none;opacity:0;transform:translateZ(50px) scale(.92);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1);z-index:3}
+  .ts-container:hover .ts-box{opacity:1;transform:translateZ(50px) scale(1)}
+  .ts-box-label{position:absolute;top:-11px;right:12px;background:rgba(10,10,12,.95);border:1px solid rgba(236,201,143,.5);color:var(--tan);font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.18em;padding:4px 10px;border-radius:3px;box-shadow:0 4px 12px rgba(0,0,0,.6)}
+  .ts-lpr-box{position:absolute;bottom:15%;left:-2%;border-left:1px solid rgba(255,255,255,.4);border-bottom:1px solid rgba(255,255,255,.4);padding:0 0 6px 12px;opacity:0;transform:translateZ(80px) translateX(15px);transition:opacity .7s cubic-bezier(.16,1,.3,1) .1s,transform .7s cubic-bezier(.16,1,.3,1) .1s;z-index:4}
+  .ts-container:hover .ts-lpr-box{opacity:1;transform:translateZ(80px) translateX(0)}
+  .ts-lpr-label{color:#fff;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.25em;text-shadow:0 2px 10px rgba(0,0,0,.9)}
+
+  /* point-to-point correspondence pairs */
+  .mpwrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin:16px 0 4px}
+  .mpair{border:1px solid rgba(236,201,143,.28);border-radius:8px;overflow:hidden;background:#0b0b11}
+  .mpimg{position:relative}
+  .mpimg img{display:block;width:100%;height:auto}
+  .mpimg svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+  .mpimg svg line{stroke-width:.9;opacity:.92;filter:drop-shadow(0 0 3px rgba(255,255,255,.3))}
+  .mpimg svg circle{stroke:rgba(10,10,12,.9);stroke-width:.7;filter:drop-shadow(0 0 4px rgba(255,255,255,.4));animation:mpdot 2.4s ease-in-out infinite}
+  .mpimg svg line.c1{stroke:#ff5d5d}.mpimg svg circle.c1{fill:#ff5d5d}
+  .mpimg svg line.c2{stroke:#37c98b}.mpimg svg circle.c2{fill:#37c98b}
+  .mpimg svg line.c3{stroke:#5aa2ff}.mpimg svg circle.c3{fill:#5aa2ff}
+  .mpimg svg line.c4{stroke:#ffd166}.mpimg svg circle.c4{fill:#ffd166}
+  @keyframes mpdot{0%,100%{opacity:.95}50%{opacity:.5}}
+  .mpcap{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;border-top:1px solid rgba(236,201,143,.18);font-family:var(--mono);font-size:10px;letter-spacing:.05em;color:var(--muted)}
+  .mpcap b{color:var(--tan)}
+  .mpcap .mtag{color:#7ee2a8}
+
+  @media(max-width:640px){ .method{grid-template-columns:1fr} .method .step{border-right:none;border-bottom:1px solid rgba(255,255,255,.08)} }
+  @media (max-width:760px){
+    nav{display:none}
+    .world{perspective:1100px;perspective-origin:50% 46%}
+    #card-reid{--tx:0px!important;--ty:-22px!important;--tz:30px!important;--ry:-7deg!important;--rx:-4deg!important;width:min(84vw,380px)}
+    .pcard.slot{width:min(66vw,300px)}
+    .pcard[data-proj="p2"]{--tx:26px!important;--ty:296px!important;--tz:-250px!important;--ry:9deg!important;--rx:4deg!important}
+    .pcard[data-proj="p3"]{--tx:26px!important;--ty:645px!important;--tz:-350px!important;--ry:-9deg!important;--rx:3deg!important}
+    .pcard[data-proj="p4"]{--tx:26px!important;--ty:995px!important;--tz:-350px!important;--ry:9deg!important;--rx:3deg!important}
+    .detail .wrap{padding-left:18px;padding-right:18px}
+  }
+  @media (prefers-reduced-motion:reduce){.grain{animation:none}}
+  @media (pointer:coarse){.cur{display:none}body{cursor:auto}}
+  /* ---------- mobile: flatten the 3D world into a scrollable card stack ---------- */
+  @media (max-width:760px){
+    html,body{height:auto;overflow:auto}
+    .world{position:relative!important;inset:auto;perspective:none;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:22px;padding:86px 16px 48px;height:auto;overflow:visible;touch-action:auto}
+    .stage{transform:none!important;transform-style:flat;width:100%;height:auto;will-change:auto}
+    .pcard,.pcard.slot,#card-reid{position:relative!important;left:auto;top:auto;transform:none!important;width:100%;max-width:440px;margin:0;--tx:0;--ty:0;--tz:0;--ry:0;--rx:0}
+    .pc-float{animation:none;transform:none}
+    .pc-frame{opacity:1;transform:none}
+    .whint{display:none}
+    .grain{display:none}
+    header{padding:14px 16px}
+  }
+
+/* ===== added: live tracking / SIFT / viewer pairs ===== */
+.duo{display:flex;gap:10px;margin:18px 0 0;align-items:flex-start}
+.duo-cell{min-width:0;border:1px solid rgba(255,255,255,.12);border-radius:10px;overflow:hidden;background:#0b0b11;box-shadow:0 22px 50px rgba(0,0,0,.45)}
+.duo-cell img{display:block;width:100%;height:auto}
+.duo-a{flex:.605 1 0}
+.duo-b{flex:.767 1 0}
+.duo-half{flex:1 1 0}
+/* ===== added: six point-to-point pairs from the Simple page ===== */
+.mpwrap-6{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mpair-svg{display:flex;flex-direction:column}
+.mpair-svg .mpimg{flex:1 1 auto;display:flex;align-items:center;padding:10px 10px 8px;background:#0b0b11}
+.mpair-svg svg.match-svg{position:static;display:block;width:100%;height:auto;pointer-events:none}
+.match-svg line,.match-svg circle{vector-effect:non-scaling-stroke;fill:none}
+.match-svg .links-under line{stroke:rgba(0,0,0,.55);stroke-width:3px}
+.match-svg .links line{stroke-width:1.25px;opacity:.95}
+.match-svg .kps circle,.match-svg .kps line{stroke-width:1.5px}
+/* ===== added: sketch matching ===== */
+.sketch{margin:18px 0 0;max-width:46rem}
+.duo-track{max-width:46rem}
+.sk-head,.sk-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.sk-head span{font-family:var(--mono);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);text-align:center;padding:0 0 8px}
+.sk-row{margin:0 0 6px}
+.sk-cell{border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:#0b0b11}
+.sk-cell img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover}
+.sk-ref{border-color:rgba(236,201,143,.34)}
+.sk-label{grid-column:1/-1;font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--tan);text-align:right;padding:2px 2px 12px}
+/* ===== added: 3D cars and crash ===== */
+.meshgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0 0}
+.mesh-cell{display:flex;align-items:center;justify-content:center;aspect-ratio:16/10;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:radial-gradient(90% 90% at 50% 45%,rgba(236,201,143,.08),rgba(11,11,17,.9) 70%)}
+.mesh-cell img{display:block;max-width:100%;max-height:100%;width:auto;height:auto}
+.trail-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.run4 .tcell img{aspect-ratio:1/1;object-position:center}
+.tcap{position:absolute;left:0;right:0;bottom:0;padding:16px 10px 8px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,243,234,.85);background:linear-gradient(to top,rgba(0,0,0,.85),transparent)}
+.tcap b{display:inline-grid;place-items:center;width:18px;height:18px;margin-right:6px;border-radius:50%;background:#f76707;color:#fff;font-size:10px;letter-spacing:0}
+.yawrow{display:grid;grid-template-columns:321fr 702fr 318fr 702fr;gap:12px;align-items:end;margin:18px 0 0;padding:16px 18px;border:1px solid rgba(255,255,255,.08);border-radius:10px;background:radial-gradient(80% 120% at 50% 60%,rgba(236,201,143,.07),rgba(11,11,17,.92) 70%)}
+.yawrow + .yawrow{margin-top:10px}
+.yaw-cell img{display:block;width:100%;height:auto}
+.insprow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:18px 0 0}
+.insprow + .insprow{margin-top:8px}
+.insp-cell{border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:#0b0b11}
+.insp-cell img{display:block;width:100%;height:auto}
+@media (max-width:760px){
+  .mpwrap-6{grid-template-columns:1fr}
+  .duo{flex-direction:column}
+  .duo-cell{width:100%}
+  .meshgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .trail-4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .yawrow{grid-template-columns:321fr 702fr;row-gap:14px}
+  .insprow{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .sk-head span{font-size:8.5px;letter-spacing:.12em}
+  /* phones: the scene root was position:fixed, so the page could not scroll past the first card */
+  .tv-root{position:relative;inset:auto;min-height:100vh}
+  /* switch sits top-centre; name and email centred just below it */
+  header{position:absolute;justify-content:center;padding:60px 16px 0}
+  .sig{margin:0 auto;align-items:center;text-align:center}
+  .world{padding-top:150px}
+}
+/* ===== added: six cards around the eye (desktop) ===== */
+@media (min-width:761px){
+  #card-reid,.pcard.slot{width:clamp(180px,min(18vw,30vh),300px)}
+  #card-reid{--tx:-24vw;--ty:-29vh;--tz:-70px}
+  .pcard[data-proj="p2"]{--tx:24vw;--ty:-29vh;--tz:-70px}
+  .pcard[data-proj="p5"]{--tx:-36vw;--ty:1.5vh;--tz:-300px}
+  .pcard[data-proj="p6"]{--tx:24vw;--ty:31vh;--tz:-120px}
+  .pcard[data-proj="p4"]{--tx:-24vw;--ty:31vh;--tz:-120px;--ry:16deg;--rx:3deg}
+  .pcard[data-proj="p3"]{--tx:36vw;--ty:1.5vh;--tz:-300px}
+  .pc-frame{padding:9px 14px 12px}
+  .pc-title{font-size:clamp(1.2rem,1.75vw,1.85rem);margin:7px 0 11px}
+  .pc-open{margin-top:11px;padding:7px 12px;font-size:9.5px}
+  /* snippets open when a card is hovered, so six cards fit around the eye */
+  .pc-snip{max-height:0;opacity:0;margin-top:0;overflow:hidden;font-size:clamp(.86rem,.95vw,.98rem);transition:max-height .45s var(--ease),opacity .35s var(--ease),margin-top .45s var(--ease)}
+  .pcard.is-hover .pc-snip{max-height:9em;opacity:1;margin-top:11px}
+  .pcard.is-hover{--lift:70px;z-index:3}
+}
+
+/* ===== added: pipeline links between the vision cards ===== */
+.links{position:fixed;inset:0;width:100%;height:100%;z-index:5;pointer-events:none;opacity:0;transition:opacity .9s var(--ease)}
+body.links-on .links{opacity:1}
+body:has(#detail.arming) .links,body:has(#detail.open) .links{opacity:0}
+.lk-glow{fill:none;stroke:rgba(236,201,143,.30);stroke-width:5}
+.lk-base{fill:none;stroke:rgba(236,201,143,.45);stroke-width:1.25}
+.lk-flow{fill:none;stroke:#ffe4b0;stroke-width:1.8;stroke-linecap:round;stroke-dasharray:1 17;animation:lkflow 1.4s linear infinite}
+.lk-dot{fill:#ecc98f;stroke:rgba(0,0,0,.65);stroke-width:1}
+@keyframes lkflow{to{stroke-dashoffset:-18}}
+@media (prefers-reduced-motion:reduce){.lk-flow{animation:none}}
+/* ===== added: where each project sits in the pipeline ===== */
+.pipe{display:flex;flex-wrap:wrap;align-items:center;gap:10px 0;margin:20px 0 0;padding:0;list-style:none;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+.pipe li{display:flex;align-items:center}
+.pipe li+li::before{content:"";flex:0 0 26px;height:1px;margin:0 11px;background:linear-gradient(90deg,rgba(236,201,143,.18),rgba(236,201,143,.65))}
+.pipe li.on{color:var(--tan)}
+.pipe li.goal{color:var(--muted)}
+.pipe li.goal::before{background:none;height:0;border-top:1px dashed rgba(236,201,143,.55)}
+.pipe .gsub{display:block;margin-top:4px;font-style:normal;letter-spacing:.06em;text-transform:none;font-size:10.5px;color:var(--faint)}
+</style>
+</helmet>
+<div class="tv-root" ref="{{ setRoot }}" data-screen-label="Portfolio — landing">
+  <canvas id="gl"></canvas>
+  <div class="grid"></div>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+  <svg class="links" id="links" aria-hidden="true" focusable="false">
+    <defs><filter id="lkglow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.4"></feGaussianBlur></filter></defs>
+    <g class="lk" data-a="reid" data-b="p5" data-sa="left" data-sb="left"><path class="lk-glow"></path><path class="lk-base"></path><path class="lk-flow"></path><circle class="lk-dot" r="3.5"></circle><circle class="lk-dot" r="3.5"></circle></g>
+    <g class="lk" data-a="p5" data-b="p4" data-sa="left" data-sb="left"><path class="lk-glow"></path><path class="lk-base"></path><path class="lk-flow"></path><circle class="lk-dot" r="3.5"></circle><circle class="lk-dot" r="3.5"></circle></g>
+    <g class="lk" data-a="p4" data-b="p6" data-sa="right" data-sb="left"><path class="lk-glow"></path><path class="lk-base"></path><path class="lk-flow"></path><circle class="lk-dot" r="3.5"></circle><circle class="lk-dot" r="3.5"></circle></g>
+  </svg>
+
+  <header>
+    <div class="sig">
+      <span class="sig-k">Portfolio of</span>
+      <a class="sig-name" href="mailto:Mblando98@outlook.com">Michael Blando</a>
+      <a class="sig-mail" href="mailto:Mblando98@outlook.com">Mblando98@outlook.com</a>
+    </div>
+  </header>
+
+  <div class="world" id="world">
+    <div class="stage" id="stage">
+
+      <article class="pcard" id="card-reid" data-proj="reid">
+        <div class="pc-float"><div class="pc-frame">
+          <div class="pc-kick">01 · Computer Vision</div>
+          <h3 class="pc-title">Vehicle <em>Re-Identification</em></h3>
+          <div class="pc-photo"><img loading="eager" fetchpriority="high" decoding="async" src="assets/reid/card.png" alt="cross-camera vehicle matches"></div>
+          <p class="pc-snip">Track and score vehicles across interstate highways, re-finding the same car between zero-overlap cameras at 10&#8202;px to 90&#8202;px quality.</p>
+          <div class="pc-open">Open the project →</div>
+        </div></div>
+      </article>
+
+      <article class="pcard slot" data-proj="p5">
+        <div class="pc-float"><div class="pc-frame">
+          <div class="pc-kick">02 · 3D Vision</div>
+          <h3 class="pc-title">Highway cars, rebuilt in <em>3D</em></h3>
+          <div class="pc-photo"><img loading="lazy" decoding="async" src="assets/cars3d/card.jpg" alt="a textured 3D model of a crossover on a turntable, rebuilt from traffic-camera footage"></div>
+          <p class="pc-snip">59 vehicles from I-76 traffic cameras, each rebuilt as a textured 3D model and tied back to the frame it came from.</p>
+          <div class="pc-open">Open the project →</div>
+        </div></div>
+      </article>
+
+      <article class="pcard slot" data-proj="p4">
+        <div class="pc-float"><div class="pc-frame">
+          <div class="pc-kick">03 · GPU / 3D</div>
+          <h3 class="pc-title">Rebuilding the city in <em>3D</em></h3>
+          <div class="pc-photo"><img loading="lazy" decoding="async" src="assets/splat/card.jpg" alt="a highway and river rebuilt as a 3D Gaussian splat, seen from a new angle"></div>
+          <p class="pc-snip">Turn ordinary street and dashcam video into a walkable 3D scene, rendered by hand-written Metal GPU shaders on a laptop with no cloud GPU.</p>
+          <div class="pc-open">Open the project →</div>
+        </div></div>
+      </article>
+
+      <article class="pcard slot" data-proj="p6">
+        <div class="pc-float"><div class="pc-frame">
+          <div class="pc-kick">04 · Forensic 3D</div>
+          <h3 class="pc-title">Rebuilding the <em>crash</em></h3>
+          <div class="pc-photo"><img loading="lazy" decoding="async" src="assets/crash/card.jpg" alt="a damaged black sedan at a crash scene beside a 3D mesh of the same car"></div>
+          <p class="pc-snip">A two-car collision on I-76: the scene photos, a 3D mesh of each car, and inspection renders from five sides.</p>
+          <div class="pc-open">Open the project →</div>
+        </div></div>
+      </article>
+
+      <article class="pcard slot" data-proj="p2">
+        <div class="pc-float"><div class="pc-frame">
+          <div class="pc-kick">05 · On-Device NLP</div>
+          <h3 class="pc-title">Catching the <em>overclaim</em></h3>
+          <div class="pc-photo"><div class="numgrid" aria-hidden="true">
+            <div class="ncol hot"><div class="nstrip"><i>2</i><i>9</i><i>1</i><i>0</i><i>3</i><i>0</i><i>0</i><i>6</i><i>4</i><i>2</i><i>9</i><i>1</i><i>0</i><i>3</i><i>0</i><i>0</i><i>6</i><i>4</i></div></div>
+            <div class="ncol"><div class="nstrip"><i>0</i><i>5</i><i>6</i><i>4</i><i>9</i><i>5</i><i>3</i><i>1</i><i>7</i><i>0</i><i>5</i><i>6</i><i>4</i><i>9</i><i>5</i><i>3</i><i>1</i><i>7</i></div></div>
+            <div class="ncol"><div class="nstrip"><i>1</i><i>0</i><i>5</i><i>6</i><i>4</i><i>8</i><i>8</i><i>8</i><i>2</i><i>1</i><i>0</i><i>5</i><i>6</i><i>4</i><i>8</i><i>8</i><i>8</i><i>2</i></div></div>
+            <div class="ncol"><div class="nstrip"><i>8</i><i>3</i><i>0</i><i>9</i><i>1</i><i>6</i><i>0</i><i>4</i><i>5</i><i>8</i><i>3</i><i>0</i><i>9</i><i>1</i><i>6</i><i>0</i><i>4</i><i>5</i></div></div>
+            <div class="ncol"><div class="nstrip"><i>0</i><i>7</i><i>2</i><i>5</i><i>9</i><i>1</i><i>3</i><i>8</i><i>6</i><i>0</i><i>7</i><i>2</i><i>5</i><i>9</i><i>1</i><i>3</i><i>8</i><i>6</i></div></div>
+            <div class="ncol"><div class="nstrip"><i>4</i><i>1</i><i>8</i><i>0</i><i>6</i><i>3</i><i>9</i><i>2</i><i>0</i><i>4</i><i>1</i><i>8</i><i>0</i><i>6</i><i>3</i><i>9</i><i>2</i><i>0</i></div></div>
+          </div></div>
+          <p class="pc-snip">A small on-device model that reads the grammar of a false action-claim — and flags it inline, before the line ships.</p>
+          <div class="pc-open">Open the project →</div>
+        </div></div>
+      </article>
+
+      <article class="pcard slot" data-proj="p3">
+        <div class="pc-float"><div class="pc-frame">
+          <div class="pc-kick">06 · Civic Data Eng</div>
+          <h3 class="pc-title">Flagging the <em>over-assessed</em></h3>
+          <div class="pc-photo"><div class="scrgrid" aria-hidden="true">
+            <div class="sr"><div class="sa">ZIP 18073<span class="sz">MONTCO</span></div><div class="sg">+58.6%</div><div class="sb">HIGH</div></div>
+            <div class="sr"><div class="sa">ZIP 19428<span class="sz">MONTCO</span></div><div class="sg">+46.2%</div><div class="sb">HIGH</div></div>
+            <div class="sr"><div class="sa">ZIP 19525<span class="sz">MONTCO</span></div><div class="sg">+44.8%</div><div class="sb">HIGH</div></div>
+          </div></div>
+          <p class="pc-snip">Gross each county assessment up to market via the Common Level Ratio, build a value from real sold comps, and flag the homes the county over-values by 10%+.</p>
+          <div class="pc-open">Open the project →</div>
+        </div></div>
+      </article>
+
+    </div>
+  </div>
+
+  <div class="whint" id="whint">Drag to look around · click a project</div>
+
+  <div class="detail" id="detail">
+    <div class="scrim" data-close></div>
+    <div class="sheet"><div class="wrap" id="detailWrap">
+
+      <div class="dview" data-proj="reid">
+        <div class="dhead">
+          <div class="dkick">01 · Computer Vision</div>
+          <h2 class="dtitle">Vehicle <em>Re-Identification</em></h2>
+        </div>
+        <div class="dbody">
+          <ol class="pipe" aria-label="Pipeline"><li class="on">01 Re-ID</li><li>02 Vehicles in 3D</li><li>03 Gaussian splat</li><li>04 Crash reconstruction</li><li class="goal"><span>Goal · 100+ miles of cameras<em class="gsub">ZIP-code fraud, late-night and dangerous driving, crashes</em></span></li></ol>
+          <p class="dthesis">Two highway cameras sit miles apart and never share a view. The same car passes both, minutes apart. This project decides whether those two sightings are one vehicle, working only from what the cameras capture: small, blurry, low-light crops with no plate left to read.</p>
+          <p class="dpara">There is rarely a single readable detail to lean on, so the match runs on the whole appearance of the car: its shape, its stance, its colour, the way light sits on the body. A vehicle picked up by one camera can then be found again on the next. Chain those matches together and a car only ever glimpsed in fragments becomes one continuous trail, across a network that was never built to follow it.</p>
+          <div class="dghead"><span class="t">Same vehicle, across the network</span><span class="s">more sightings · one car</span></div>
+          <div class="trail">
+            <div class="tcell"><img loading="lazy" decoding="async" src="assets/reid/sight_0.png" alt="another sighting of the same vehicle"></div>
+            <div class="tcell"><img loading="lazy" decoding="async" src="assets/reid/sight_1.png" alt="another sighting of the same vehicle"></div>
+            <div class="tcell"><img loading="lazy" decoding="async" src="assets/reid/sight_2.png" alt="another sighting of the same vehicle"></div>
+          </div>
+          <p class="featcap">The same hatchback turns up on three more cameras across the network. Different angles, different light, and not one readable plate among them.</p>
+          <div class="dghead"><span class="t">The camera network</span><span class="s">511PA &middot; greater Philadelphia</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/reid/network-map.jpg" alt="satellite map of greater Philadelphia with a blue dot at each 511PA traffic camera and I-76 traced in orange"></div>
+          <p class="mcapt"><b>432</b> of the <b>1,537</b> cameras in Pennsylvania&rsquo;s 511PA network, which covers 21 interstates and 61 of 67 counties. Orange: I-76, the Schuylkill Expressway. Camera locations: 511PA. Imagery: USGS. Roads &copy; OpenStreetMap contributors.</p>
+          <div class="dghead"><span class="t">The network, placed in the world</span><span class="s">3D scene reconstruction</span></div>
+          <p class="dpara">Knowing two cameras saw the same car is only half the answer. The other half is geography: where each camera sits, which way it points, and exactly which stretch of road it can see. So a camera can be set inside a photoreal 3D model of the city, at its real coordinates, with the stretch of road it covers projected onto the street. Camera 4876, below, is one of them.</p>
+          <div class="geo">
+            <img loading="lazy" decoding="async" src="assets/reid/geo_scene.jpg" alt="a highway camera rebuilt in a photoreal 3D model of the city, its viewing frustum projected onto the road below">
+            <div class="geohud"><span class="gdot"></span>Live · 06:04:59 UTC</div>
+          </div>
+          <p class="mcapt">Camera <b>4876</b> on I-76 westbound, rebuilt in 3D over the Schuylkill. The gold frustum is the camera's real field of view projected onto the road, with the raw night feed inset at lower right.</p>
+          <div class="specrow"><span class="spec">39.96397° N, 75.18418° W</span><span class="spec">bearing 248°</span><span class="spec">62° field of view</span><span class="spec">photoreal 3D tiles</span></div>
+          <div class="dghead"><span class="t">Tracking, live</span><span class="s">per-camera IDs &middot; one Tesla on both</span></div>
+          <div class="duo duo-track">
+            <div class="duo-cell duo-a"><img loading="lazy" decoding="async" src="../assets/img/reid/tracking-1.jpg" alt="live expressway camera with a green box, ID and motion trail on each vehicle; the Tesla, #265 on this camera, in yellow"></div>
+            <div class="duo-cell duo-b"><img loading="lazy" decoding="async" src="../assets/img/reid/tracking-2.jpg" alt="second live expressway camera with nine tracked vehicles; the same Tesla, #74 on this camera, in yellow"></div>
+          </div>
+          <p class="mcapt">Two live I-76 cameras. IDs are assigned per camera, and each vehicle keeps its ID and trail from frame to frame. The yellow box marks the same Tesla on both: <b>#265</b> on the first camera, <b>#74</b> on the second.</p>
+          <div class="dghead"><span class="t">One match, up close</span><span class="s">same car · two cameras</span></div>
+          <div class="feat">
+            <div class="featpanel"><img loading="lazy" decoding="async" src="assets/reid/hero_a.png" alt="first camera sighting"><div class="plabel"><b>Camera A</b> · first sighting</div></div>
+            <div class="featlink"><div class="ar"></div><div class="lb">Match</div><div class="sim">0.69</div><div class="lb">similarity</div></div>
+            <div class="featpanel"><img loading="lazy" decoding="async" src="assets/reid/hero_b.png" alt="re-identified on a second camera"><div class="plabel"><b>Camera B</b> · re-identified</div></div>
+          </div>
+          <p class="featcap">The same blue hatchback on two highway cameras, <em>re-identified</em> from appearance alone, with no plate to read.</p>
+          <div class="dghead"><span class="t">Point to point, across cameras</span><span class="s">same points &middot; two sightings</span></div>
+          <p class="dpara">Six re-finds. In each pair, lines join the same points on the vehicle in both sightings: roof corners, window edges, lamps, mirrors. The points come from dense optical flow (DIS) between the two crops, kept only if they pass a forward-backward check and RANSAC. The score under each pair is the model&rsquo;s similarity, and no plate is readable in either crop.</p>
+          <div class="mpwrap mpwrap-6">
+            <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 631.0 300" role="img" aria-label="Two sightings of a blue Jeep, front view from different cameras, with 12 lines linking the same points on the vehicle">
+          <image href="../assets/img/reid/pair-jeep-front-a.jpg" x="0" y="0" width="301.0" height="300" preserveAspectRatio="none"/>
+          <image href="../assets/img/reid/pair-jeep-front-b.jpg" x="341.0" y="0" width="290.0" height="300" preserveAspectRatio="none"/>
+          <g class="links-under"><line x1="231.8" y1="61.2" x2="562.1" y2="77.3" data-c="#ff3b30"/><line x1="178.6" y1="65.2" x2="512.4" y2="80.4" data-c="#ff9500"/><line x1="204.7" y1="76.3" x2="537.4" y2="92.1" data-c="#ffcc00"/><line x1="254.8" y1="82.3" x2="584.6" y2="87.6" data-c="#a3e635"/><line x1="184.6" y1="90.3" x2="515.4" y2="105.7" data-c="#34c759"/><line x1="274.9" y1="92.3" x2="599.9" y2="97.6" data-c="#00c7be"/><line x1="239.8" y1="104.3" x2="571.1" y2="111.9" data-c="#32ade6"/><line x1="211.7" y1="107.4" x2="541.1" y2="118.0" data-c="#007aff"/><line x1="261.9" y1="119.4" x2="590.5" y2="120.6" data-c="#5856d6"/><line x1="104.3" y1="170.6" x2="440.4" y2="185.1" data-c="#af52de"/><line x1="91.3" y1="191.6" x2="427.5" y2="206.1" data-c="#ff2d55"/><line x1="127.4" y1="194.6" x2="457.7" y2="208.9" data-c="#f59e0b"/></g>
+          <g class="links"><line x1="231.8" y1="61.2" x2="562.1" y2="77.3" stroke="#ff3b30"/><line x1="178.6" y1="65.2" x2="512.4" y2="80.4" stroke="#ff9500"/><line x1="204.7" y1="76.3" x2="537.4" y2="92.1" stroke="#ffcc00"/><line x1="254.8" y1="82.3" x2="584.6" y2="87.6" stroke="#a3e635"/><line x1="184.6" y1="90.3" x2="515.4" y2="105.7" stroke="#34c759"/><line x1="274.9" y1="92.3" x2="599.9" y2="97.6" stroke="#00c7be"/><line x1="239.8" y1="104.3" x2="571.1" y2="111.9" stroke="#32ade6"/><line x1="211.7" y1="107.4" x2="541.1" y2="118.0" stroke="#007aff"/><line x1="261.9" y1="119.4" x2="590.5" y2="120.6" stroke="#5856d6"/><line x1="104.3" y1="170.6" x2="440.4" y2="185.1" stroke="#af52de"/><line x1="91.3" y1="191.6" x2="427.5" y2="206.1" stroke="#ff2d55"/><line x1="127.4" y1="194.6" x2="457.7" y2="208.9" stroke="#f59e0b"/></g>
+          <g class="kps"><g stroke="#ff3b30"><circle cx="231.8" cy="61.2" r="6.0"/><line x1="231.8" y1="61.2" x2="227.9" y2="65.8"/><circle cx="562.1" cy="77.3" r="6.0"/><line x1="562.1" y1="77.3" x2="558.1" y2="81.8"/></g><g stroke="#ff9500"><circle cx="178.6" cy="65.2" r="6.0"/><line x1="178.6" y1="65.2" x2="173.3" y2="62.5"/><circle cx="512.4" cy="80.4" r="6.0"/><line x1="512.4" y1="80.4" x2="507.1" y2="77.6"/></g><g stroke="#ffcc00"><circle cx="204.7" cy="76.3" r="6.0"/><line x1="204.7" y1="76.3" x2="207.4" y2="70.9"/><circle cx="537.4" cy="92.1" r="6.0"/><line x1="537.4" y1="92.1" x2="540.2" y2="86.8"/></g><g stroke="#a3e635"><circle cx="254.8" cy="82.3" r="6.0"/><line x1="254.8" y1="82.3" x2="257.5" y2="87.7"/><circle cx="584.6" cy="87.6" r="6.0"/><line x1="584.6" y1="87.6" x2="587.1" y2="93.0"/></g><g stroke="#34c759"><circle cx="184.6" cy="90.3" r="6.0"/><line x1="184.6" y1="90.3" x2="178.9" y2="88.3"/><circle cx="515.4" cy="105.7" r="6.0"/><line x1="515.4" y1="105.7" x2="509.8" y2="103.7"/></g><g stroke="#00c7be"><circle cx="274.9" cy="92.3" r="6.0"/><line x1="274.9" y1="92.3" x2="270.0" y2="88.9"/><circle cx="599.9" cy="97.6" r="6.0"/><line x1="599.9" y1="97.6" x2="595.0" y2="94.2"/></g><g stroke="#32ade6"><circle cx="239.8" cy="104.3" r="6.0"/><line x1="239.8" y1="104.3" x2="236.5" y2="109.4"/><circle cx="571.1" cy="111.9" r="6.0"/><line x1="571.1" y1="111.9" x2="567.7" y2="116.9"/></g><g stroke="#007aff"><circle cx="211.7" cy="107.4" r="6.0"/><line x1="211.7" y1="107.4" x2="216.6" y2="110.9"/><circle cx="541.1" cy="118.0" r="6.0"/><line x1="541.1" y1="118.0" x2="546.0" y2="121.6"/></g><g stroke="#5856d6"><circle cx="261.9" cy="119.4" r="6.0"/><line x1="261.9" y1="119.4" x2="263.4" y2="113.6"/><circle cx="590.5" cy="120.6" r="6.0"/><line x1="590.5" y1="120.6" x2="592.1" y2="114.9"/></g><g stroke="#af52de"><circle cx="104.3" cy="170.6" r="6.0"/><line x1="104.3" y1="170.6" x2="110.3" y2="169.9"/><circle cx="440.4" cy="185.1" r="6.0"/><line x1="440.4" y1="185.1" x2="446.3" y2="184.5"/></g><g stroke="#ff2d55"><circle cx="91.3" cy="191.6" r="6.0"/><line x1="91.3" y1="191.6" x2="85.5" y2="190.1"/><circle cx="427.5" cy="206.1" r="6.0"/><line x1="427.5" y1="206.1" x2="421.8" y2="204.5"/></g><g stroke="#f59e0b"><circle cx="127.4" cy="194.6" r="6.0"/><line x1="127.4" y1="194.6" x2="131.0" y2="189.8"/><circle cx="457.7" cy="208.9" r="6.0"/><line x1="457.7" y1="208.9" x2="461.3" y2="204.1"/></g></g>
+        </svg></div><div class="mpcap"><span>sim <b>0.82</b></span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 615.2 300" role="img" aria-label="Two sightings of a blue Jeep from behind from different cameras, with 12 lines linking the same points on the vehicle">
+          <image href="../assets/img/reid/pair-jeep-rear-a.jpg" x="0" y="0" width="319.3" height="300" preserveAspectRatio="none"/>
+          <image href="../assets/img/reid/pair-jeep-rear-b.jpg" x="359.3" y="0" width="255.9" height="300" preserveAspectRatio="none"/>
+          <g class="links-under"><line x1="81.9" y1="50.6" x2="419.0" y2="58.5" data-c="#ff3b30"/><line x1="169.3" y1="58.9" x2="505.8" y2="67.0" data-c="#ff9500"/><line x1="215.3" y1="69.9" x2="550.2" y2="71.9" data-c="#ffcc00"/><line x1="188.7" y1="70.9" x2="524.7" y2="76.7" data-c="#a3e635"/><line x1="220.9" y1="120.6" x2="552.0" y2="125.5" data-c="#34c759"/><line x1="73.6" y1="139.0" x2="415.6" y2="151.6" data-c="#00c7be"/><line x1="109.5" y1="139.9" x2="450.6" y2="152.1" data-c="#32ade6"/><line x1="102.1" y1="167.5" x2="444.7" y2="178.5" data-c="#007aff"/><line x1="206.1" y1="188.7" x2="543.1" y2="190.7" data-c="#5856d6"/><line x1="188.7" y1="210.7" x2="525.2" y2="213.3" data-c="#af52de"/><line x1="237.4" y1="222.7" x2="567.5" y2="222.8" data-c="#ff2d55"/><line x1="198.8" y1="237.4" x2="536.2" y2="235.8" data-c="#f59e0b"/></g>
+          <g class="links"><line x1="81.9" y1="50.6" x2="419.0" y2="58.5" stroke="#ff3b30"/><line x1="169.3" y1="58.9" x2="505.8" y2="67.0" stroke="#ff9500"/><line x1="215.3" y1="69.9" x2="550.2" y2="71.9" stroke="#ffcc00"/><line x1="188.7" y1="70.9" x2="524.7" y2="76.7" stroke="#a3e635"/><line x1="220.9" y1="120.6" x2="552.0" y2="125.5" stroke="#34c759"/><line x1="73.6" y1="139.0" x2="415.6" y2="151.6" stroke="#00c7be"/><line x1="109.5" y1="139.9" x2="450.6" y2="152.1" stroke="#32ade6"/><line x1="102.1" y1="167.5" x2="444.7" y2="178.5" stroke="#007aff"/><line x1="206.1" y1="188.7" x2="543.1" y2="190.7" stroke="#5856d6"/><line x1="188.7" y1="210.7" x2="525.2" y2="213.3" stroke="#af52de"/><line x1="237.4" y1="222.7" x2="567.5" y2="222.8" stroke="#ff2d55"/><line x1="198.8" y1="237.4" x2="536.2" y2="235.8" stroke="#f59e0b"/></g>
+          <g class="kps"><g stroke="#ff3b30"><circle cx="81.9" cy="50.6" r="6.0"/><line x1="81.9" y1="50.6" x2="83.7" y2="44.9"/><circle cx="419.0" cy="58.5" r="6.0"/><line x1="419.0" y1="58.5" x2="420.5" y2="52.7"/></g><g stroke="#ff9500"><circle cx="169.3" cy="58.9" r="6.0"/><line x1="169.3" y1="58.9" x2="170.1" y2="52.9"/><circle cx="505.8" cy="67.0" r="6.0"/><line x1="505.8" y1="67.0" x2="506.3" y2="61.1"/></g><g stroke="#ffcc00"><circle cx="215.3" cy="69.9" r="6.0"/><line x1="215.3" y1="69.9" x2="210.2" y2="66.9"/><circle cx="550.2" cy="71.9" r="6.0"/><line x1="550.2" y1="71.9" x2="544.9" y2="69.2"/></g><g stroke="#a3e635"><circle cx="188.7" cy="70.9" r="6.0"/><line x1="188.7" y1="70.9" x2="193.2" y2="67.0"/><circle cx="524.7" cy="76.7" r="6.0"/><line x1="524.7" y1="76.7" x2="529.1" y2="72.6"/></g><g stroke="#34c759"><circle cx="220.9" cy="120.6" r="6.0"/><line x1="220.9" y1="120.6" x2="216.2" y2="124.3"/><circle cx="552.0" cy="125.5" r="6.0"/><line x1="552.0" y1="125.5" x2="547.5" y2="129.5"/></g><g stroke="#00c7be"><circle cx="73.6" cy="139.0" r="6.0"/><line x1="73.6" y1="139.0" x2="77.6" y2="134.5"/><circle cx="415.6" cy="151.6" r="6.0"/><line x1="415.6" y1="151.6" x2="419.3" y2="147.0"/></g><g stroke="#32ade6"><circle cx="109.5" cy="139.9" r="6.0"/><line x1="109.5" y1="139.9" x2="115.4" y2="138.8"/><circle cx="450.6" cy="152.1" r="6.0"/><line x1="450.6" y1="152.1" x2="456.5" y2="150.7"/></g><g stroke="#007aff"><circle cx="102.1" cy="167.5" r="6.0"/><line x1="102.1" y1="167.5" x2="104.7" y2="162.0"/><circle cx="444.7" cy="178.5" r="6.0"/><line x1="444.7" y1="178.5" x2="447.0" y2="172.9"/></g><g stroke="#5856d6"><circle cx="206.1" cy="188.7" r="6.0"/><line x1="206.1" y1="188.7" x2="209.3" y2="193.8"/><circle cx="543.1" cy="190.7" r="6.0"/><line x1="543.1" y1="190.7" x2="546.5" y2="195.6"/></g><g stroke="#af52de"><circle cx="188.7" cy="210.7" r="6.0"/><line x1="188.7" y1="210.7" x2="193.4" y2="214.3"/><circle cx="525.2" cy="213.3" r="6.0"/><line x1="525.2" y1="213.3" x2="530.2" y2="216.7"/></g><g stroke="#ff2d55"><circle cx="237.4" cy="222.7" r="6.0"/><line x1="237.4" y1="222.7" x2="240.0" y2="217.3"/><circle cx="567.5" cy="222.8" r="6.0"/><line x1="567.5" y1="222.8" x2="569.8" y2="217.3"/></g><g stroke="#f59e0b"><circle cx="198.8" cy="237.4" r="6.0"/><line x1="198.8" y1="237.4" x2="204.4" y2="235.3"/><circle cx="536.2" cy="235.8" r="6.0"/><line x1="536.2" y1="235.8" x2="541.7" y2="233.4"/></g></g>
+        </svg></div><div class="mpcap"><span>sim <b>0.88</b></span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 767.6 300" role="img" aria-label="Two sightings of a pickup truck from different cameras, with 9 lines linking the same points on the vehicle">
+          <image href="../assets/img/reid/pair-pickup-a.jpg" x="0" y="0" width="387.3" height="300" preserveAspectRatio="none"/>
+          <image href="../assets/img/reid/pair-pickup-b.jpg" x="427.3" y="0" width="340.3" height="300" preserveAspectRatio="none"/>
+          <g class="links-under"><line x1="311.2" y1="42.5" x2="693.9" y2="59.2" data-c="#ff3b30"/><line x1="206.0" y1="68.3" x2="597.4" y2="106.0" data-c="#ff9500"/><line x1="281.0" y1="77.2" x2="659.3" y2="99.9" data-c="#a3e635"/><line x1="325.7" y1="105.2" x2="696.6" y2="123.0" data-c="#34c759"/><line x1="258.6" y1="111.9" x2="635.8" y2="135.6" data-c="#32ade6"/><line x1="219.4" y1="128.7" x2="603.3" y2="156.2" data-c="#007aff"/><line x1="171.3" y1="183.6" x2="558.8" y2="206.4" data-c="#5856d6"/><line x1="123.1" y1="200.4" x2="521.0" y2="223.4" data-c="#ff2d55"/><line x1="135.4" y1="241.8" x2="525.0" y2="255.6" data-c="#f59e0b"/></g>
+          <g class="links"><line x1="311.2" y1="42.5" x2="693.9" y2="59.2" stroke="#ff3b30"/><line x1="206.0" y1="68.3" x2="597.4" y2="106.0" stroke="#ff9500"/><line x1="281.0" y1="77.2" x2="659.3" y2="99.9" stroke="#a3e635"/><line x1="325.7" y1="105.2" x2="696.6" y2="123.0" stroke="#34c759"/><line x1="258.6" y1="111.9" x2="635.8" y2="135.6" stroke="#32ade6"/><line x1="219.4" y1="128.7" x2="603.3" y2="156.2" stroke="#007aff"/><line x1="171.3" y1="183.6" x2="558.8" y2="206.4" stroke="#5856d6"/><line x1="123.1" y1="200.4" x2="521.0" y2="223.4" stroke="#ff2d55"/><line x1="135.4" y1="241.8" x2="525.0" y2="255.6" stroke="#f59e0b"/></g>
+          <g class="kps"><g stroke="#ff3b30"><circle cx="311.2" cy="42.5" r="6.0"/><line x1="311.2" y1="42.5" x2="305.8" y2="45.1"/><circle cx="693.9" cy="59.2" r="6.0"/><line x1="693.9" y1="59.2" x2="688.7" y2="62.0"/></g><g stroke="#ff9500"><circle cx="206.0" cy="68.3" r="6.0"/><line x1="206.0" y1="68.3" x2="204.4" y2="62.5"/><circle cx="597.4" cy="106.0" r="6.0"/><line x1="597.4" y1="106.0" x2="595.5" y2="100.3"/></g><g stroke="#a3e635"><circle cx="281.0" cy="77.2" r="6.0"/><line x1="281.0" y1="77.2" x2="285.7" y2="81.0"/><circle cx="659.3" cy="99.9" r="6.0"/><line x1="659.3" y1="99.9" x2="664.2" y2="103.4"/></g><g stroke="#34c759"><circle cx="325.7" cy="105.2" r="6.0"/><line x1="325.7" y1="105.2" x2="320.2" y2="103.1"/><circle cx="696.6" cy="123.0" r="6.0"/><line x1="696.6" y1="123.0" x2="690.9" y2="121.1"/></g><g stroke="#32ade6"><circle cx="258.6" cy="111.9" r="6.0"/><line x1="258.6" y1="111.9" x2="262.4" y2="107.3"/><circle cx="635.8" cy="135.6" r="6.0"/><line x1="635.8" y1="135.6" x2="639.4" y2="130.8"/></g><g stroke="#007aff"><circle cx="219.4" cy="128.7" r="6.0"/><line x1="219.4" y1="128.7" x2="221.1" y2="134.5"/><circle cx="603.3" cy="156.2" r="6.0"/><line x1="603.3" y1="156.2" x2="605.3" y2="161.9"/></g><g stroke="#5856d6"><circle cx="171.3" cy="183.6" r="6.0"/><line x1="171.3" y1="183.6" x2="175.0" y2="178.9"/><circle cx="558.8" cy="206.4" r="6.0"/><line x1="558.8" y1="206.4" x2="562.3" y2="201.5"/></g><g stroke="#ff2d55"><circle cx="123.1" cy="200.4" r="6.0"/><line x1="123.1" y1="200.4" x2="119.8" y2="195.4"/><circle cx="521.0" cy="223.4" r="6.0"/><line x1="521.0" y1="223.4" x2="517.4" y2="218.6"/></g><g stroke="#f59e0b"><circle cx="135.4" cy="241.8" r="6.0"/><line x1="135.4" y1="241.8" x2="140.7" y2="238.8"/><circle cx="525.0" cy="255.6" r="6.0"/><line x1="525.0" y1="255.6" x2="530.1" y2="252.4"/></g></g>
+        </svg></div><div class="mpcap"><span>sim <b>0.89</b></span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 700.8 300" role="img" aria-label="Two sightings of a white minivan from different cameras, with 7 lines linking the same points on the vehicle">
+          <image href="../assets/img/reid/pair-minivan-a.jpg" x="0" y="0" width="348.2" height="300" preserveAspectRatio="none"/>
+          <image href="../assets/img/reid/pair-minivan-b.jpg" x="388.2" y="0" width="312.7" height="300" preserveAspectRatio="none"/>
+          <g class="links-under"><line x1="218.7" y1="47.2" x2="593.4" y2="59.7" data-c="#ff3b30"/><line x1="126.4" y1="66.2" x2="502.7" y2="71.6" data-c="#ffcc00"/><line x1="176.6" y1="149.5" x2="545.2" y2="169.5" data-c="#34c759"/><line x1="57.2" y1="161.5" x2="436.9" y2="169.3" data-c="#32ade6"/><line x1="41.1" y1="181.6" x2="423.2" y2="186.3" data-c="#007aff"/><line x1="212.6" y1="199.4" x2="574.4" y2="228.1" data-c="#af52de"/><line x1="147.4" y1="222.4" x2="515.4" y2="240.0" data-c="#f59e0b"/></g>
+          <g class="links"><line x1="218.7" y1="47.2" x2="593.4" y2="59.7" stroke="#ff3b30"/><line x1="126.4" y1="66.2" x2="502.7" y2="71.6" stroke="#ffcc00"/><line x1="176.6" y1="149.5" x2="545.2" y2="169.5" stroke="#34c759"/><line x1="57.2" y1="161.5" x2="436.9" y2="169.3" stroke="#32ade6"/><line x1="41.1" y1="181.6" x2="423.2" y2="186.3" stroke="#007aff"/><line x1="212.6" y1="199.4" x2="574.4" y2="228.1" stroke="#af52de"/><line x1="147.4" y1="222.4" x2="515.4" y2="240.0" stroke="#f59e0b"/></g>
+          <g class="kps"><g stroke="#ff3b30"><circle cx="218.7" cy="47.2" r="6.0"/><line x1="218.7" y1="47.2" x2="223.7" y2="43.8"/><circle cx="593.4" cy="59.7" r="6.0"/><line x1="593.4" y1="59.7" x2="598.6" y2="56.7"/></g><g stroke="#ffcc00"><circle cx="126.4" cy="66.2" r="6.0"/><line x1="126.4" y1="66.2" x2="126.4" y2="72.2"/><circle cx="502.7" cy="71.6" r="6.0"/><line x1="502.7" y1="71.6" x2="502.2" y2="77.6"/></g><g stroke="#34c759"><circle cx="176.6" cy="149.5" r="6.0"/><line x1="176.6" y1="149.5" x2="174.2" y2="155.0"/><circle cx="545.2" cy="169.5" r="6.0"/><line x1="545.2" y1="169.5" x2="542.5" y2="174.9"/></g><g stroke="#32ade6"><circle cx="57.2" cy="161.5" r="6.0"/><line x1="57.2" y1="161.5" x2="58.5" y2="167.4"/><circle cx="436.9" cy="169.3" r="6.0"/><line x1="436.9" y1="169.3" x2="437.8" y2="175.2"/></g><g stroke="#007aff"><circle cx="41.1" cy="181.6" r="6.0"/><line x1="41.1" y1="181.6" x2="46.8" y2="183.6"/><circle cx="423.2" cy="186.3" r="6.0"/><line x1="423.2" y1="186.3" x2="428.7" y2="188.7"/></g><g stroke="#af52de"><circle cx="212.6" cy="199.4" r="7.9"/><line x1="212.6" y1="199.4" x2="219.4" y2="195.2"/><circle cx="574.4" cy="228.1" r="7.3"/><line x1="574.4" y1="228.1" x2="580.8" y2="224.7"/></g><g stroke="#f59e0b"><circle cx="147.4" cy="222.4" r="11.0"/><line x1="147.4" y1="222.4" x2="136.7" y2="219.8"/><circle cx="515.4" cy="240.0" r="10.8"/><line x1="515.4" y1="240.0" x2="505.0" y2="236.8"/></g></g>
+        </svg></div><div class="mpcap"><span>sim <b>0.89</b></span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 774.1 300" role="img" aria-label="Two sightings of a white hatchback from different cameras, with 9 lines linking the same points on the vehicle">
+          <image href="../assets/img/reid/pair-hatchback-a.jpg" x="0" y="0" width="399.2" height="300" preserveAspectRatio="none"/>
+          <image href="../assets/img/reid/pair-hatchback-b.jpg" x="439.2" y="0" width="334.8" height="300" preserveAspectRatio="none"/>
+          <g class="links-under"><line x1="303.5" y1="31.2" x2="704.2" y2="40.5" data-c="#ff3b30"/><line x1="231.9" y1="54.2" x2="646.3" y2="62.1" data-c="#ff9500"/><line x1="147.7" y1="62.3" x2="573.9" y2="68.0" data-c="#a3e635"/><line x1="334.6" y1="70.4" x2="718.5" y2="78.6" data-c="#34c759"/><line x1="313.8" y1="91.2" x2="699.0" y2="101.7" data-c="#32ade6"/><line x1="237.7" y1="110.8" x2="640.2" y2="118.1" data-c="#007aff"/><line x1="263.1" y1="125.8" x2="661.2" y2="132.3" data-c="#5856d6"/><line x1="234.2" y1="162.7" x2="635.5" y2="170.7" data-c="#ff2d55"/><line x1="120.0" y1="174.2" x2="549.8" y2="182.1" data-c="#f59e0b"/></g>
+          <g class="links"><line x1="303.5" y1="31.2" x2="704.2" y2="40.5" stroke="#ff3b30"/><line x1="231.9" y1="54.2" x2="646.3" y2="62.1" stroke="#ff9500"/><line x1="147.7" y1="62.3" x2="573.9" y2="68.0" stroke="#a3e635"/><line x1="334.6" y1="70.4" x2="718.5" y2="78.6" stroke="#34c759"/><line x1="313.8" y1="91.2" x2="699.0" y2="101.7" stroke="#32ade6"/><line x1="237.7" y1="110.8" x2="640.2" y2="118.1" stroke="#007aff"/><line x1="263.1" y1="125.8" x2="661.2" y2="132.3" stroke="#5856d6"/><line x1="234.2" y1="162.7" x2="635.5" y2="170.7" stroke="#ff2d55"/><line x1="120.0" y1="174.2" x2="549.8" y2="182.1" stroke="#f59e0b"/></g>
+          <g class="kps"><g stroke="#ff3b30"><circle cx="303.5" cy="31.2" r="6.0"/><line x1="303.5" y1="31.2" x2="309.4" y2="32.2"/><circle cx="704.2" cy="40.5" r="6.0"/><line x1="704.2" y1="40.5" x2="710.1" y2="41.3"/></g><g stroke="#ff9500"><circle cx="231.9" cy="54.2" r="6.0"/><line x1="231.9" y1="54.2" x2="234.6" y2="48.9"/><circle cx="646.3" cy="62.1" r="6.0"/><line x1="646.3" y1="62.1" x2="648.7" y2="56.6"/></g><g stroke="#a3e635"><circle cx="147.7" cy="62.3" r="6.0"/><line x1="147.7" y1="62.3" x2="153.0" y2="59.4"/><circle cx="573.9" cy="68.0" r="6.0"/><line x1="573.9" y1="68.0" x2="579.0" y2="64.9"/></g><g stroke="#34c759"><circle cx="334.6" cy="70.4" r="6.0"/><line x1="334.6" y1="70.4" x2="339.9" y2="67.5"/><circle cx="718.5" cy="78.6" r="6.0"/><line x1="718.5" y1="78.6" x2="723.6" y2="75.5"/></g><g stroke="#32ade6"><circle cx="313.8" cy="91.2" r="6.0"/><line x1="313.8" y1="91.2" x2="308.5" y2="94.0"/><circle cx="699.0" cy="101.7" r="6.0"/><line x1="699.0" y1="101.7" x2="693.8" y2="104.7"/></g><g stroke="#007aff"><circle cx="237.7" cy="110.8" r="6.0"/><line x1="237.7" y1="110.8" x2="242.7" y2="107.4"/><circle cx="640.2" cy="118.1" r="6.0"/><line x1="640.2" y1="118.1" x2="645.1" y2="114.6"/></g><g stroke="#5856d6"><circle cx="263.1" cy="125.8" r="6.0"/><line x1="263.1" y1="125.8" x2="268.5" y2="123.2"/><circle cx="661.2" cy="132.3" r="6.0"/><line x1="661.2" y1="132.3" x2="666.5" y2="129.6"/></g><g stroke="#ff2d55"><circle cx="234.2" cy="162.7" r="6.0"/><line x1="234.2" y1="162.7" x2="231.2" y2="157.5"/><circle cx="635.5" cy="170.7" r="6.0"/><line x1="635.5" y1="170.7" x2="632.2" y2="165.6"/></g><g stroke="#f59e0b"><circle cx="120.0" cy="174.2" r="6.0"/><line x1="120.0" y1="174.2" x2="122.2" y2="168.7"/><circle cx="549.8" cy="182.1" r="6.0"/><line x1="549.8" y1="182.1" x2="551.9" y2="176.5"/></g></g>
+        </svg></div><div class="mpcap"><span>sim <b>0.90</b></span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair mpair-svg"><div class="mpimg"><svg class="match-svg" viewBox="0 0 587.8 300" role="img" aria-label="Two sightings of a white passenger van from different cameras, with 9 lines linking the same points on the vehicle">
+          <image href="../assets/img/reid/pair-van-a.jpg" x="0" y="0" width="290.0" height="300" preserveAspectRatio="none"/>
+          <image href="../assets/img/reid/pair-van-b.jpg" x="330.0" y="0" width="257.9" height="300" preserveAspectRatio="none"/>
+          <g class="links-under"><line x1="206.7" y1="102.3" x2="526.6" y2="103.9" data-c="#ff3b30"/><line x1="246.8" y1="116.4" x2="559.5" y2="114.6" data-c="#ff9500"/><line x1="193.6" y1="140.5" x2="508.9" y2="138.7" data-c="#a3e635"/><line x1="256.9" y1="147.5" x2="565.2" y2="136.4" data-c="#34c759"/><line x1="219.7" y1="177.6" x2="534.0" y2="168.0" data-c="#32ade6"/><line x1="152.5" y1="178.6" x2="464.8" y2="183.0" data-c="#007aff"/><line x1="133.3" y1="185.8" x2="445.0" y2="192.3" data-c="#5856d6"/><line x1="197.7" y1="188.6" x2="508.2" y2="183.5" data-c="#ff2d55"/><line x1="166.6" y1="215.7" x2="477.7" y2="213.5" data-c="#f59e0b"/></g>
+          <g class="links"><line x1="206.7" y1="102.3" x2="526.6" y2="103.9" stroke="#ff3b30"/><line x1="246.8" y1="116.4" x2="559.5" y2="114.6" stroke="#ff9500"/><line x1="193.6" y1="140.5" x2="508.9" y2="138.7" stroke="#a3e635"/><line x1="256.9" y1="147.5" x2="565.2" y2="136.4" stroke="#34c759"/><line x1="219.7" y1="177.6" x2="534.0" y2="168.0" stroke="#32ade6"/><line x1="152.5" y1="178.6" x2="464.8" y2="183.0" stroke="#007aff"/><line x1="133.3" y1="185.8" x2="445.0" y2="192.3" stroke="#5856d6"/><line x1="197.7" y1="188.6" x2="508.2" y2="183.5" stroke="#ff2d55"/><line x1="166.6" y1="215.7" x2="477.7" y2="213.5" stroke="#f59e0b"/></g>
+          <g class="kps"><g stroke="#ff3b30"><circle cx="206.7" cy="102.3" r="6.0"/><line x1="206.7" y1="102.3" x2="212.6" y2="101.6"/><circle cx="526.6" cy="103.9" r="6.0"/><line x1="526.6" y1="103.9" x2="532.5" y2="103.1"/></g><g stroke="#ff9500"><circle cx="246.8" cy="116.4" r="6.0"/><line x1="246.8" y1="116.4" x2="250.7" y2="120.9"/><circle cx="559.5" cy="114.6" r="6.0"/><line x1="559.5" y1="114.6" x2="563.5" y2="119.1"/></g><g stroke="#a3e635"><circle cx="193.6" cy="140.5" r="6.0"/><line x1="193.6" y1="140.5" x2="199.5" y2="141.6"/><circle cx="508.9" cy="138.7" r="6.0"/><line x1="508.9" y1="138.7" x2="514.9" y2="139.8"/></g><g stroke="#34c759"><circle cx="256.9" cy="147.5" r="6.0"/><line x1="256.9" y1="147.5" x2="259.4" y2="142.1"/><circle cx="565.2" cy="136.4" r="6.0"/><line x1="565.2" y1="136.4" x2="567.7" y2="130.9"/></g><g stroke="#32ade6"><circle cx="219.7" cy="177.6" r="6.0"/><line x1="219.7" y1="177.6" x2="214.9" y2="174.0"/><circle cx="534.0" cy="168.0" r="6.0"/><line x1="534.0" y1="168.0" x2="529.1" y2="164.5"/></g><g stroke="#007aff"><circle cx="152.5" cy="178.6" r="6.0"/><line x1="152.5" y1="178.6" x2="157.2" y2="174.9"/><circle cx="464.8" cy="183.0" r="6.0"/><line x1="464.8" y1="183.0" x2="469.5" y2="179.2"/></g><g stroke="#5856d6"><circle cx="133.3" cy="185.8" r="6.0"/><line x1="133.3" y1="185.8" x2="127.3" y2="186.2"/><circle cx="445.0" cy="192.3" r="6.0"/><line x1="445.0" y1="192.3" x2="439.0" y2="192.8"/></g><g stroke="#ff2d55"><circle cx="197.7" cy="188.6" r="6.0"/><line x1="197.7" y1="188.6" x2="201.2" y2="193.4"/><circle cx="508.2" cy="183.5" r="6.0"/><line x1="508.2" y1="183.5" x2="511.9" y2="188.3"/></g><g stroke="#f59e0b"><circle cx="166.6" cy="215.7" r="6.0"/><line x1="166.6" y1="215.7" x2="163.6" y2="210.5"/><circle cx="477.7" cy="213.5" r="6.0"/><line x1="477.7" y1="213.5" x2="474.7" y2="208.3"/></g></g>
+        </svg></div><div class="mpcap"><span>sim <b>0.86</b></span><span class="mtag">RE-FOUND</span></div></div>
+          </div>
+          <div class="dghead"><span class="t">One pickup, four cameras</span><span class="s">about a mile of I-76 &middot; heading north</span></div>
+          <div class="trail trail-4 run4">
+            <div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/reid/pickup-4988.jpg" alt="white pickup, front view, camera 4988"><span class="tcap"><b>1</b> Camera 4988</span></div>
+            <div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/reid/pickup-5115.jpg" alt="the same pickup, front view, camera 5115"><span class="tcap"><b>2</b> Camera 5115</span></div>
+            <div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/reid/pickup-5832.jpg" alt="the same pickup from behind, camera 5832"><span class="tcap"><b>3</b> Camera 5832</span></div>
+            <div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/reid/pickup-5114.jpg" alt="the same pickup from behind, camera 5114"><span class="tcap"><b>4</b> Camera 5114</span></div>
+          </div>
+          <p class="mcapt">The same white pickup on four cameras in a row. Front at <b>4988 &rarr; 5115</b>: 0.87 match, 39 s apart, 0.29 mi &divide; 39 s &asymp; <b>27 mph</b>. From behind at <b>5832 &rarr; 5114</b>: 0.76 match, 30 s apart, 0.40 mi &divide; 30 s &asymp; <b>48 mph</b>.</p>
+          <div class="dghead"><span class="t">Two more re-finds, timed</span><span class="s">time between sightings</span></div>
+          <div class="mpwrap">
+            <div class="mpair"><div class="mpimg"><img loading="lazy" decoding="async" src="assets/reid/timed-suv.jpg" alt="the same blue SUV from behind on two cameras"></div><div class="mpcap"><span>sim <b>0.65</b> &middot; 72 s apart</span><span class="mtag">RE-FOUND</span></div></div>
+            <div class="mpair"><div class="mpimg"><img loading="lazy" decoding="async" src="assets/reid/timed-van.jpg" alt="the same white cargo van on two cameras"></div><div class="mpcap"><span>sim <b>0.58</b> &middot; 52 s apart</span><span class="mtag">RE-FOUND</span></div></div>
+          </div>
+          <p class="mcapt">Time between the two sightings, from the pipeline&rsquo;s output.</p>
+          <div class="dghead"><span class="t">Match to a sketch</span><span class="s">make &middot; model &middot; year</span></div>
+          <p class="dpara">The input is tiny. A one to two second clip at 320&times;240, where the vehicle crop stands barely 10 to 90 pixels tall. From the fused frame, the pipeline pulls an edge map and a silhouette, then matches that shape against a library of reference sketches to call the vehicle&rsquo;s <em>make, model and year</em>. No plate, no colour, and no readable badge needed.</p>
+          <div class="specrow"><span class="spec">320&times;240 source</span><span class="spec">1-2&thinsp;s clip</span><span class="spec">10-90&thinsp;px crop</span><span class="spec">plate-free</span></div>
+          <div class="sketch">
+            <div class="sk-head"><span>Camera</span><span>Edges</span><span>Silhouette</span><span>Sketch</span></div>
+            <div class="sk-row">
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-nseries-1.jpg" alt="box truck as the camera saw it"></div>
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-nseries-2.jpg" alt="edge map of the box truck"></div>
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-nseries-3.jpg" alt="silhouette of the box truck"></div>
+              <div class="sk-cell sk-ref"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-nseries-4.jpg" alt="reference sketch matched to the box truck"></div>
+              <div class="sk-label">Isuzu N-Series &middot; 2017</div>
+            </div>
+            <div class="sk-row">
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-seltos-1.jpg" alt="compact SUV as the camera saw it"></div>
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-seltos-2.jpg" alt="edge map of the compact SUV"></div>
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-seltos-3.jpg" alt="silhouette of the compact SUV"></div>
+              <div class="sk-cell sk-ref"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-seltos-4.jpg" alt="reference sketch matched to the compact SUV"></div>
+              <div class="sk-label">Kia Seltos &middot; 2021</div>
+            </div>
+            <div class="sk-row">
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-crv-1.jpg" alt="SUV as the camera saw it"></div>
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-crv-2.jpg" alt="edge map of the SUV"></div>
+              <div class="sk-cell"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-crv-3.jpg" alt="silhouette of the SUV"></div>
+              <div class="sk-cell sk-ref"><img loading="lazy" decoding="async" src="../assets/img/reid/mm-crv-4.jpg" alt="reference sketch matched to the SUV"></div>
+              <div class="sk-label">Honda CR-V &middot; 2018</div>
+            </div>
+          </div>
+          <p class="mcapt">Matched from shape alone.</p>
+          <div class="dghead"><span class="t">Method · one clean look</span><span class="s">frame-by-frame fusion</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/reid/montage_clean.png" alt="one vehicle tracked frame by frame across a single camera"></div>
+          <p class="mcapt">One vehicle, all <b>40</b> frames the camera caught of it on a single pass. Some frames are detected outright; the rest are bridged in between, where the detector dropped out.</p>
+          <p class="dpara">A camera only holds a car for a moment, a few dozen frames as it passes. Each frame is a slightly different look: the vehicle shifts, rescales and catches the light as it moves, and any one of them is too smeared or too dark to trust by itself. So the pipeline never bets on a single frame. It uses the whole track.</p>
+          <div class="method">
+            <div class="step"><div class="n">01 · Track</div><div class="st">Follow the motion</div><div class="sd">Lock onto the vehicle and follow it frame by frame as it travels through the view, interpolating across the frames where the detector drops out.</div></div>
+            <div class="step"><div class="n">02 · Align</div><div class="st">Register the frames</div><div class="sd">Compensate for the car's motion and change in scale so every crop in the track lines up on the same vehicle, not the moving background.</div></div>
+            <div class="step"><div class="n">03 · Fuse</div><div class="st">Build one image</div><div class="sd">Combine the aligned stack into a single look. Averaging the aligned frames cancels much of the blur and sensor noise that any one frame carries.</div></div>
+          </div>
+          <p class="dnote">That fused image, not any single raw frame, is the vehicle's signature for matching across cameras.</p>
+        </div>
+      </div>
+
+      <div class="dview" data-proj="p2">
+        <div class="dhead">
+          <div class="dkick">05 · On-Device NLP</div>
+          <h2 class="dtitle">Catching the <em>overclaim</em> before it lands</h2>
+        </div>
+        <div class="dbody">
+          <p class="dthesis">A small model, hand-tuned on ten million words of Claude transcripts, that reads the grammar of a false action claim and flags it the moment it forms. It runs inline and on-device, before the line ever reaches the reader.</p>
+          <p class="dpara">Overclaims have a grammar. The model is not checking facts. It recognizes the <em>shape</em> of a sentence that asserts an action the assistant never took: a finished task, a tool result, a sweeping certainty with nothing behind it.</p>
+          <div class="specrow"><span class="spec">10M words hand-tuned</span><span class="spec">runs on-device</span><span class="spec">scored inline</span><span class="spec">no server</span></div>
+          <div class="dghead"><span class="t">A turn, marked up</span><span class="s">scored inline &middot; on-device</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/p2/markup.png" alt="an assistant turn marked up — three overclaims underlined, each tied to the tell that caught it"></div>
+          <p class="mcapt">The reply is read like a proof. Each overclaim is <b>underlined</b> and tied to the linguistic tell that caught it, with one quiet verdict. <b>&ldquo;ran the full test suite&rdquo;</b> has no matching tool call this turn.</p>
+          <div class="dghead"><span class="t">What it watches for</span><span class="s">four learned tells</span></div>
+          <div class="tells">
+            <div class="tell"><span class="tn">past-tense completion</span><span class="tf">F-4172</span></div>
+            <div class="tell"><span class="tn">unverified tool result</span><span class="tf">F-0881</span></div>
+            <div class="tell"><span class="tn">blanket certainty</span><span class="tf">F-3390</span></div>
+            <div class="tell"><span class="tn">first-person action</span><span class="tf">F-1207</span></div>
+          </div>
+          <div class="dghead"><span class="t">From clip to flag</span><span class="s">capture &rarr; flag</span></div>
+          <div class="flow">
+            <div class="fline"></div><div class="ffill"></div>
+            <div class="frow">
+              <div class="fstep"><span class="fdot"></span><div class="fn">01</div><div class="ft">Capture</div><div class="fd">the turn's text, as it streams</div></div>
+              <div class="fstep"><span class="fdot"></span><div class="fn">02</div><div class="ft">Tokenize</div><div class="fd">split into spans, on-device</div></div>
+              <div class="fstep"><span class="fdot"></span><div class="fn">03</div><div class="ft">Scan</div><div class="fd">match the learned grammar</div></div>
+              <div class="fstep"><span class="fdot"></span><div class="fn">04</div><div class="ft">Score</div><div class="fd">weight the active tells</div></div>
+              <div class="fstep last"><span class="fdot"></span><div class="fn">05</div><div class="ft">Flag</div><div class="fd">raise it before the span shows</div></div>
+            </div>
+          </div>
+          <div class="dghead"><span class="t">Confirming it against the tools</span><span class="s">tokenize &middot; vectorize &middot; compare</span></div>
+          <p class="dpara">The grammar model only raises a suspicion. To settle it, the claim is checked against what the turn actually did. The flagged span is split into tokens, each token becomes a vector, and the pooled claim vector is compared by cosine similarity to every tool call made this turn. A claim that matches a real action sits close to it. One that invented the action sits far from everything.</p>
+          <div class="verify">
+            <div class="vembed">
+              <div class="vlab">flagged span</div>
+              <div class="vclaim">ran the full test suite</div>
+              <div class="vstep"><span class="vk">tokenize</span><div class="tok"><span class="tk">ran</span><span class="tk">the</span><span class="tk">full</span><span class="tk">test</span><span class="tk">suite</span></div></div>
+              <div class="vstep"><span class="vk">vectorize</span><div class="vec"><i style="height:10px"></i><i style="height:21px"></i><i style="height:5px"></i><i style="height:16px"></i><i style="height:25px"></i><i style="height:8px"></i><i style="height:14px"></i><i style="height:27px"></i><i style="height:11px"></i><i style="height:6px"></i><i style="height:19px"></i><i style="height:22px"></i><i style="height:9px"></i><i style="height:15px"></i><i style="height:4px"></i><i style="height:20px"></i><i style="height:26px"></i><i style="height:11px"></i><i style="height:7px"></i><i style="height:17px"></i><i style="height:13px"></i><i style="height:23px"></i><i style="height:10px"></i><i style="height:16px"></i><i style="height:5px"></i><i style="height:20px"></i></div></div>
+              <div class="vmeta">pooled claim vector &middot; 768-dim</div>
+            </div>
+            <div class="vcompare">
+              <div class="vlab">cosine vs this turn&rsquo;s tool calls</div>
+              <div class="vthresh">dashed line marks the 0.35 cutoff</div>
+              <div class="simlist">
+                <div class="simrow"><span class="snm">edit_file<i>auth/session.ts</i></span><span class="bar"><span style="width:14%"></span></span><span class="score">0.14</span></div>
+                <div class="simrow"><span class="snm">read_file<i>config/router.ts</i></span><span class="bar"><span style="width:11%"></span></span><span class="score">0.11</span></div>
+                <div class="simrow"><span class="snm">grep<i>&ldquo;test&rdquo;</i></span><span class="bar"><span style="width:21%"></span></span><span class="score">0.21</span></div>
+              </div>
+              <div class="verdict bad"><span class="vd">overclaim</span><span>top match 0.21, under the 0.35 threshold. nothing this turn ran the suite.</span></div>
+            </div>
+          </div>
+          <div class="vcontrast"><span class="vc-tag">cleared</span><span class="vc-claim">refactored the auth module</span><span class="vc-right"><span class="vc-tool">edit_file &middot; auth/session.ts</span><span class="vc-bar"><span style="width:86%"></span></span><span class="vc-score">0.86</span></span></div>
+          <div class="dghead"><span class="t">Exposed as on-device tools</span><span class="s">called inline &middot; no server</span></div>
+          <p class="dpara">The same three steps are exposed as tools the model can call mid-turn, so a line can be checked the instant it is written. Each call runs on-device against the local transcript, with no embedding service and no network.</p>
+          <div class="toolsig">
+            <div class="tsig"><span class="fn">tokenize</span><span class="sg">(span)</span><span class="ar">&rarr;</span><span class="rt">token[]</span></div>
+            <div class="tsig"><span class="fn">embed</span><span class="sg">(token[])</span><span class="ar">&rarr;</span><span class="rt">vec[768]</span></div>
+            <div class="tsig"><span class="fn">cosine</span><span class="sg">(vec, vec)</span><span class="ar">&rarr;</span><span class="rt">0.00 to 1.00</span></div>
+          </div>
+          <div class="dghead"><span class="t">How it learned</span><span class="s">10M words &middot; hand-labelled</span></div>
+          <p class="dpara">Ten million single words, pulled from real Claude transcripts and hand-labelled, tune a model small enough to run inline on-device, with no server and no round trip. It scores every span as it is generated and raises a flag before an overclaim reaches the reader.</p>
+          <p class="dnote">Built to live where the text is written: the same gold underline you would give a proof, drawn the instant a claim outruns what actually happened.</p>
+        </div>
+      </div>
+
+      <div class="dview" data-proj="p3">
+        <div class="dhead">
+          <div class="dkick">06 · Civic Data Eng</div>
+          <h2 class="dtitle">Flagging the <em>over-assessed</em></h2>
+        </div>
+        <div class="dbody">
+          <p class="dthesis">A Pennsylvania county assesses each home at roughly thirty-one cents on the dollar of market value. Gross that assessment back up to a full-market value with the state's published Common Level Ratio, build an independent value from real sold comps, and flag every home the county over-values by ten percent or more &mdash; the candidates most likely to win on appeal.</p>
+          <div class="specrow"><span class="spec">ArcGIS REST parcels</span><span class="spec">Redfin sold comps</span><span class="spec">Common Level Ratio</span><span class="spec">FEMA USA_Structures</span><span class="spec">sightline casting</span></div>
+          <div class="dghead"><span class="t">One home, grossed up to market</span><span class="s">county est. &minus; comps = gap</span></div>
+          <div class="calc">
+            <div class="crow"><div class="cl">County est. (implied FMV)</div><div class="cv">$847,367</div></div>
+            <div class="crow"><div class="cl">Comp value &middot; 6 real solds</div><div class="cv">$553,953</div></div>
+            <div class="crow"><div class="cl">Gap</div><div class="cv"><em>+34.6%</em></div><div class="cbar"><i style="width:34.6%"></i></div></div>
+            <div class="crow cverdict"><div class="cl">Verdict</div><div class="cv">HIGH &middot; appeal candidate</div></div>
+          </div>
+          <p class="mcapt">A 2,892&thinsp;sqft, 4bd/2ba home in ZIP 19027, Montgomery County &mdash; assessed at $260,650, grossed up at the published 0.3076 ratio. Six comps, all within 0.73&thinsp;mi. The county's implied value sits <b>$293,414</b> above what those sales support &mdash; about <b>$4,041/yr</b> in excess tax at the county's median millage.</p>
+          <div class="dghead"><span class="t">The comp gates</span><span class="s">&le;1 mi &middot; &plusmn;20% sqft &middot; &le;24 mo</span></div>
+          <p class="dpara">A comp is only admitted if it sold within a mile of the subject, within twenty percent of its square footage, within one bed and one bath, and within the last twenty-four months. Loosen any of those and the &ldquo;comp&rdquo; stops being evidence of what this home is worth and starts being noise. The gates are tuned to keep every candidate backed by four to six real, nearby, recent sales &mdash; nothing aspirational, nothing from a different market.</p>
+          <div class="dghead"><span class="t">Method &middot; three moves</span><span class="s">gross up &middot; comp &middot; flag</span></div>
+          <div class="method">
+            <div class="step"><div class="n">01 &middot; Gross up</div><div class="st">Assessment &rarr; market</div><div class="sd">Divide each parcel's county assessment by the published Common Level Ratio (0.3076 in Montgomery) to recover the county's implied full-market value.</div></div>
+            <div class="step"><div class="n">02 &middot; Build comps</div><div class="st">Real solds, gated</div><div class="sd">Pull Redfin solds for the county, keep only those passing the distance, size, bed/bath and recency gates, then take the supported comp value.</div></div>
+            <div class="step"><div class="n">03 &middot; Flag</div><div class="st">Gap &ge; 10% &rarr; appeal</div><div class="sd">Compare implied FMV to comp value. A gap of ten percent or more is flagged HIGH / FAIR / LOW and ranked for appeal priority by recency, size and proximity.</div></div>
+          </div>
+          <div class="dghead"><span class="t">The review app</span><span class="s">every candidate &middot; comps on the map</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="../assets/img/law/appeal-review.jpg" alt="Appeal Manager desktop app: ranked candidates, comparable-sales table, and a satellite map pinning each comp with its distance"></div>
+          <p class="mcapt">The output feeds <b>Appeal Manager</b>, a desktop review app. Open any flagged home and the county's implied value sits beside the real sales &mdash; each comp pinned on the satellite map with its distance &mdash; plus the yearly tax an appeal would save.</p>
+          <div class="dghead"><span class="t">The signal that didn't work</span><span class="s">FEMA footprints &middot; sightlines</span></div>
+          <p class="dpara">View and openness ought to predict which homes are over-assessed &mdash; a house on a ravine lot should be worth less than its square footage implies. So each parcel was given a view score: FEMA USA_Structures footprints built the surrounding massing, and sightlines were cast from the subject to the horizon to measure how open each direction was.</p>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/p3/sightline_openness.jpg" alt="aerial tile: parcel boundaries, FEMA building footprints, and each home's longest sightline drawn and color-coded"></div>
+          <p class="mcapt">One square of the county, every home measured. Yellow lines are parcel boundaries, red shapes are FEMA building footprints, green fill is a parcel with no building. Each dot is a home; the ray leaving it is its longest clear sightline of <b>36 directions</b> tested &mdash; green runs long, red is hemmed in.</p>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/p3/view_grid.jpg" alt="grid comparing flagged homes against their comparable sales, view distance measured in four compass directions"></div>
+          <p class="mcapt">Flagged homes (blue border) beside their own comps (gray), every tile centered on the dwelling with its view measured in the four compass directions. Production scores a home by its <b>farthest clear direction</b> and only calls it more open when that beats its comps' average by <b>15%+</b>.</p>
+          <p class="dpara">It measured nothing. Regressed against the valuation gap across the county's flagged homes, openness came back at <em>r &asymp; 0.06</em> (p &asymp; 0.15) &mdash; indistinguishable from chance. Rather than ship a confounder as a feature, the view score was dropped as a screener signal. It survives only as a per-home tiebreaker inside an otherwise-tied band.</p>
+          <div class="dghead"><span class="t">A new highway, parcel by parcel</span><span class="s">eminent domain &middot; US-322</span></div>
+          <p class="dpara">The same parcel tooling, pointed at a highway. PennDOT is planning the State College Area Connector on US-322. Every parcel in the corridor is pulled from PennDOT&rsquo;s own map service and colored by the owner&rsquo;s response to its survey-access notices, and a console built for a law firm ranks the 541 affected properties for outreach.</p>
+          <div class="montage"><img loading="lazy" decoding="async" src="../assets/img/law/corridor-parcels.jpg" alt="satellite view of the valley east of State College with every parcel in the planned corridor outlined and colored by the owner's response"></div>
+          <p class="mcapt">Parcels along PennDOT&rsquo;s planned corridor, from PennDOT&rsquo;s map service. Orange: no notice received, or refused. Green: contact the owner in advance.</p>
+          <div class="montage"><img loading="lazy" decoding="async" src="../assets/img/law/corridor-console.jpg" alt="corridor console: a table of affected property owners beside a satellite map of the corridor parcels shaded by tier, with names and addresses blurred"></div>
+          <p class="mcapt">The corridor console in use at the firm: 541 affected properties ranked for outreach, with tiers on the map. Names and addresses blurred.</p>
+          <p class="dnote">The Montgomery County run flags <b>38,266</b> homes with a positive gap &mdash; <b>15,036</b> of them at ten percent or more, <b>$1.68B</b> of implied value that comparable sales can't find. Buildable so far: Montgomery, Northampton and Allegheny, with Lehigh partial: its portal sits behind a CAPTCHA, so living area is backfilled from Redfin sales. Full case study: <a href="montco/" style="color:var(--tan)">the $1.68B assessment gap</a>.</p>
+        </div>
+      </div>
+
+      <div class="dview" data-proj="p4">
+        <div class="dhead">
+          <div class="dkick">03 · GPU / 3D Reconstruction</div>
+          <h2 class="dtitle">Rebuilding the city as a <em>3D scene</em></h2>
+        </div>
+        <div class="dbody">
+          <ol class="pipe" aria-label="Pipeline"><li>01 Re-ID</li><li>02 Vehicles in 3D</li><li class="on">03 Gaussian splat</li><li>04 Crash reconstruction</li><li class="goal"><span>Goal · 100+ miles of cameras<em class="gsub">ZIP-code fraud, late-night and dangerous driving, crashes</em></span></li></ol>
+          <p class="dthesis">Ordinary street and dashcam footage, turned into a 3D scene you can move through. The whole reconstruction runs on a single laptop with no cloud GPU, on hand-written Metal shaders built to get past the limits of the usual tooling.</p>
+          <p class="dpara">Gaussian splatting represents a scene as millions of tiny soft blobs of colour and light. Getting it to run well on Apple Silicon meant writing the heavy parts by hand: the rasterizer that draws every splat, the correspondence step that lines up views, and the sort that decides drawing order, all as custom Metal GPU shaders rather than the slow default path.</p>
+          <div class="specrow"><span class="spec">Gaussian splatting</span><span class="spec">hand-written Metal shaders</span><span class="spec">Apple Silicon &middot; no cloud GPU</span><span class="spec">on a 24&#8202;GB laptop</span></div>
+          <div class="dghead"><span class="t">The corridor, rebuilt in 3D</span><span class="s">Gaussian splat &middot; rendered from scratch</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/splat/wide.jpg" alt="the I-76 corridor over the Schuylkill rendered from the Gaussian splat reconstruction"></div>
+          <p class="mcapt">The I-76 corridor over the Schuylkill, rebuilt from video as a Gaussian splat and rendered from scratch &mdash; road, rail, water and buildings all reconstructed and re-lit by the GPU.</p>
+          <div class="dghead"><span class="t">A camera where none ever was</span><span class="s">novel view &middot; never filmed</span></div>
+          <div class="montage"><img loading="lazy" decoding="async" src="assets/splat/orbit.jpg" alt="the reconstructed corridor rendered from a camera angle that was never in the original footage"></div>
+          <p class="mcapt">Once the scene exists in 3D you can place the camera where none ever stood and render a clean frame from it. Every frame here is the splat, not the source footage.</p>
+          <div class="dghead"><span class="t">What the hand-written GPU work bought</span><span class="s">measured &middot; before and after</span></div>
+          <div class="specrow"><span class="spec">863&times; faster rasterization</span><span class="spec">3,192&#8202;ms &rarr; 3.7&#8202;ms</span><span class="spec">37.2 &rarr; 42.0&#8202;dB PSNR</span><span class="spec">single 24&#8202;GB laptop</span></div>
+          <p class="dnote">Written to run where the footage is: one laptop, the compute-heavy parts moved off the slow default path and onto GPU shaders written by hand, with no cloud GPU anywhere in the pipeline.</p>
+          <div class="dghead"><span class="t">Feature detection, on the GPU</span><span class="s">SIFT &middot; Mojo / Metal vs OpenCV</span></div>
+          <div class="duo">
+            <div class="duo-cell duo-half"><img loading="lazy" decoding="async" src="../assets/img/recon/sift-metal.jpg" alt="highway frame with 100 SIFT keypoints marked in green along a sign gantry and lane markings"></div>
+            <div class="duo-cell duo-half"><img loading="lazy" decoding="async" src="../assets/img/recon/sift-opencv.jpg" alt="the same frame with 473 OpenCV SIFT keypoints drawn as colored circles"></div>
+          </div>
+          <p class="mcapt">SIFT keypoints on one highway frame. Left: Mojo/Metal SIFT, octave 0 (<b>100</b> keypoints). Right: OpenCV SIFT, full run (<b>473</b> keypoints).</p>
+        </div>
+      </div>
+
+      <div class="dview" data-proj="p5">
+        <div class="dhead">
+          <div class="dkick">02 · 3D Vision</div>
+          <h2 class="dtitle">Highway cars, rebuilt in <em>3D</em></h2>
+        </div>
+        <div class="dbody">
+          <ol class="pipe" aria-label="Pipeline"><li>01 Re-ID</li><li class="on">02 Vehicles in 3D</li><li>03 Gaussian splat</li><li>04 Crash reconstruction</li><li class="goal"><span>Goal · 100+ miles of cameras<em class="gsub">ZIP-code fraud, late-night and dangerous driving, crashes</em></span></li></ol>
+          <p class="dthesis">Vehicles seen by I-76 traffic cameras, each rebuilt as a textured 3D model. A browser viewer sets every model on a turntable beside the camera frame it came from, with the detection that found it.</p>
+          <div class="specrow"><span class="spec">59 vehicles</span><span class="spec">I-76 traffic cameras</span><span class="spec">textured meshes</span><span class="spec">browser viewer</span></div>
+          <div class="dghead"><span class="t">The lot</span><span class="s">model &middot; source frame &middot; detection</span></div>
+          <div class="duo">
+            <div class="duo-cell duo-half"><img loading="lazy" decoding="async" src="../assets/img/recon/vehicle-viewer-1.jpg" alt="viewer showing a textured 3D model of a Tesla Model Y on a turntable, with the traffic-camera frame it came from"></div>
+            <div class="duo-cell duo-half"><img loading="lazy" decoding="async" src="../assets/img/recon/vehicle-viewer-2.jpg" alt="the same viewer showing a green Subaru Crosstrek rebuilt from the same camera"></div>
+          </div>
+          <p class="mcapt">Two of the <b>59</b>: a Tesla Model Y and a Subaru Crosstrek, each beside its source frame with the detection in red.</p>
+          <div class="dghead"><span class="t">Shape only</span><span class="s">untextured meshes &middot; two angles</span></div>
+          <div class="meshgrid"><div class="mesh-cell mesh-wide"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-0-profile.png" alt="untextured mesh, side view"></div><div class="mesh-cell mesh-wide"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-3-profile.png" alt="untextured mesh, side view"></div><div class="mesh-cell mesh-wide"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-505-profile.png" alt="untextured mesh, side view"></div><div class="mesh-cell mesh-wide"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-402-profile.png" alt="untextured mesh, side view"></div><div class="mesh-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-0-front.png" alt="untextured mesh, front three-quarter view"></div><div class="mesh-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-3-front.png" alt="untextured mesh, front three-quarter view"></div><div class="mesh-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-505-front.png" alt="untextured mesh, front three-quarter view"></div><div class="mesh-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/mesh-402-front.png" alt="untextured mesh, front three-quarter view"></div></div>
+          <p class="mcapt">Four of the vehicles as bare meshes: side view, then front three-quarter.</p>
+        </div>
+      </div>
+
+      <div class="dview" data-proj="p6">
+        <div class="dhead">
+          <div class="dkick">04 · Forensic 3D</div>
+          <h2 class="dtitle">Rebuilding the <em>crash</em></h2>
+        </div>
+        <div class="dbody">
+          <ol class="pipe" aria-label="Pipeline"><li>01 Re-ID</li><li>02 Vehicles in 3D</li><li>03 Gaussian splat</li><li class="on">04 Crash reconstruction</li><li class="goal"><span>Goal · 100+ miles of cameras<em class="gsub">ZIP-code fraud, late-night and dangerous driving, crashes</em></span></li></ol>
+          <p class="dthesis">A two-car collision on I-76. The scene photos, a 3D mesh of each car at four angles, and inspection renders from five sides.</p>
+          <div class="dghead"><span class="t">The scene</span><span class="s">photos &middot; I-76</span></div>
+          <div class="trail trail-4"><div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-photo-1.jpg" alt="black sedan at the crash scene"></div><div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-photo-2.jpg" alt="silver and black sedans after the collision"></div><div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-photo-3.jpg" alt="front damage at the scene"></div><div class="tcell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-photo-4.jpg" alt="black sedan with front-end damage"></div></div>
+          <div class="dghead"><span class="t">Each car as a mesh</span><span class="s">0&deg; &middot; 90&deg; &middot; 180&deg; &middot; 270&deg;</span></div>
+          <div class="yawrow"><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-black-yaw-0.png" alt="black sedan mesh at 0 degrees"></div><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-black-yaw-90.png" alt="black sedan mesh at 90 degrees"></div><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-black-yaw-180.png" alt="black sedan mesh at 180 degrees"></div><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-black-yaw-270.png" alt="black sedan mesh at 270 degrees"></div></div>
+          <div class="yawrow"><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-silver-yaw-0.png" alt="silver sedan mesh at 0 degrees"></div><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-silver-yaw-90.png" alt="silver sedan mesh at 90 degrees"></div><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-silver-yaw-180.png" alt="silver sedan mesh at 180 degrees"></div><div class="yaw-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-silver-yaw-270.png" alt="silver sedan mesh at 270 degrees"></div></div>
+          <p class="mcapt">Black sedan (top) and silver sedan (bottom), untextured, turned through four angles.</p>
+          <div class="dghead"><span class="t">Inspection renders</span><span class="s">front &middot; left &middot; rear &middot; right &middot; top</span></div>
+          <div class="insprow"><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-black-front.jpg" alt="black sedan inspection render, front"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-black-left.jpg" alt="black sedan inspection render, left"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-black-rear.jpg" alt="black sedan inspection render, rear"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-black-right.jpg" alt="black sedan inspection render, right"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-black-top.jpg" alt="black sedan inspection render, top"></div></div>
+          <div class="insprow"><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-silver-front.jpg" alt="silver sedan inspection render, front"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-silver-left.jpg" alt="silver sedan inspection render, left"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-silver-rear.jpg" alt="silver sedan inspection render, rear"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-silver-right.jpg" alt="silver sedan inspection render, right"></div><div class="insp-cell"><img loading="lazy" decoding="async" src="../assets/img/recon/crash-inspection-silver-top.jpg" alt="silver sedan inspection render, top"></div></div>
+          <p class="mcapt">Each car rendered from five sides, black sedan above and silver sedan below.</p>
+        </div>
+      </div>
+
+    </div></div>
+    <button class="dclose" id="dclose" data-close>&times; Close</button>
+  </div>
+
+  <div class="cur"><div class="ring"></div><div class="dot"></div></div>
+  <div id="curtain"><div class="lg">Michael <em>Blando</em></div></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;irisColors&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:[&quot;#f6ead2&quot;,&quot;#d8b074&quot;,&quot;#8a6b3e&quot;],&quot;options&quot;:[[&quot;#f6ead2&quot;,&quot;#d8b074&quot;,&quot;#8a6b3e&quot;],[&quot;#e7f0f6&quot;,&quot;#9fb6c6&quot;,&quot;#46606f&quot;],[&quot;#f3e6f2&quot;,&quot;#c79fd0&quot;,&quot;#5e3f6f&quot;],[&quot;#e6f3ec&quot;,&quot;#86c7a0&quot;,&quot;#2f5a43&quot;]],&quot;tsType&quot;:&quot;string[]&quot;,&quot;section&quot;:&quot;Iris&quot;},&quot;spinSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:2.5,&quot;min&quot;:0,&quot;max&quot;:2.5,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Iris&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.75,&quot;min&quot;:0.4,&quot;max&quot;:1.6,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Iris&quot;},&quot;eyeTracksCursor&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Iris&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#ecc98f&quot;,&quot;options&quot;:[&quot;#ecc98f&quot;,&quot;#9fb6c6&quot;,&quot;#c79fd0&quot;,&quot;#86c7a0&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Interface&quot;},&quot;openTransition&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;zoom&quot;,&quot;options&quot;:[&quot;zoom&quot;,&quot;iris&quot;,&quot;rise&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Interface&quot;},&quot;filmGrain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interface&quot;},&quot;introAnimation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interface&quot;}}">
+class Component extends DCLogic {
+  componentDidMount(){
+    this._mounted = true;
+    this.params = this._readParams();
+    const tryBoot = () => {
+      if(!this._mounted) return;
+      if(window.THREE){ try{ this._boot(); }catch(e){ console.error('Portfolio boot error', e); this._failsafe(); } }
+      else setTimeout(tryBoot, 30);
+    };
+    tryBoot();
+  }
+  componentWillUnmount(){
+    this._mounted = false;
+    if(this._raf) cancelAnimationFrame(this._raf);
+    (this._cleanup||[]).forEach(fn=>{ try{ fn(); }catch(e){} });
+    if(this._renderer){ try{ this._renderer.dispose(); }catch(e){} }
+  }
+  componentDidUpdate(prev){
+    if(!this._booted) return;
+    const pal = (a)=> Array.isArray(a) ? a.join(',') : '';
+    const np = this.props||{}, op = prev||{};
+    this.params = this._readParams();
+    this._applyAccent(); this._applyGrain();
+    if(pal(np.irisColors)!==pal(op.irisColors) || (np.density??1)!==(op.density??1)){
+      if(this._rebuildEye) this._rebuildEye();
+    }
+  }
+  _readParams(){
+    const p = this.props||{};
+    const iris = (Array.isArray(p.irisColors) && p.irisColors.length>=3) ? p.irisColors : ['#f6ead2','#d8b074','#8a6b3e'];
+    return {
+      iris,
+      accent: p.accent || '#ecc98f',
+      spin: (p.spinSpeed ?? 1),
+      density: (p.density ?? 1),
+      track: p.eyeTracksCursor !== false,
+      grain: p.filmGrain !== false,
+      intro: p.introAnimation !== false,
+      openTx: (['zoom','iris','rise'].indexOf(p.openTransition)>=0 ? p.openTransition : 'zoom')
+    };
+  }
+  _q(s){ return (this._root||document).querySelector(s); }
+  _qa(s){ return [...(this._root||document).querySelectorAll(s)]; }
+  _shade(hex,f){
+    const h = String(hex).replace('#','');
+    const s = h.length===3 ? h.split('').map(c=>c+c).join('') : h;
+    const n = parseInt(s,16); let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+    r=Math.round(r*f); g=Math.round(g*f); b=Math.round(b*f);
+    return '#'+[r,g,b].map(v=>Math.max(0,Math.min(255,v)).toString(16).padStart(2,'0')).join('');
+  }
+  _applyAccent(){
+    const el = document.documentElement;
+    el.style.setProperty('--tan', this.params.accent);
+    el.style.setProperty('--tan-deep', this._shade(this.params.accent, 0.86));
+  }
+  _applyGrain(){ const g=this._q('.grain'); if(g) g.style.display = this.params.grain ? 'block' : 'none'; }
+  _failsafe(){
+    const c=this._q('#curtain'); if(c) c.style.display='none';
+    this._qa('.pc-frame,.brand,nav a,.whint').forEach(e=>{ e.style.opacity=1; e.style.transform='none'; });
+  }
+  renderVals(){
+    if(!this._setRoot) this._setRoot = (el)=>{ if(el) this._root = el; };
+    return { setRoot: this._setRoot };
+  }
+  _boot(){
+    if(this._booted) return; this._booted = true;
+    this._cleanup = [];
+    const self = this;
+    this._applyAccent(); this._applyGrain();
+
+    // ---------- mini motion engine ----------
+    const EASES={'ease-out':cb(0,0,.58,1),'ease':cb(.25,.1,.25,1),'ease-in-out':cb(.42,0,.58,1),'ease-in':cb(.42,0,1,1),'linear':x=>x};
+    function cb(x1,y1,x2,y2){const cx=3*x1,bx=3*(x2-x1)-cx,ax=1-cx-bx,cy=3*y1,by=3*(y2-y1)-cy,ay=1-cy-by;
+      const fx=t=>((ax*t+bx)*t+cx)*t,fy=t=>((ay*t+by)*t+cy)*t,dfx=t=>(3*ax*t+2*bx)*t+cx;
+      return x=>{let t=x;for(let i=0;i<6;i++){const e=fx(t)-x;if(Math.abs(e)<1e-4)break;const d=dfx(t)||1e-4;t-=e/d;}return fy(t);};}
+    function toEaseFn(e){return typeof e==='function'?e:Array.isArray(e)?cb(e[0],e[1],e[2],e[3]):(EASES[e]||EASES['ease-out']);}
+    function cssEase(e){return Array.isArray(e)?`cubic-bezier(${e.join(',')})`:(typeof e==='string'?e:'cubic-bezier(.22,.61,.36,1)');}
+    function resolveEls(t){if(t instanceof Element)return [t];if(typeof t==='string')return self._qa(t);if(t&&t.length!=null)return [...t];return [];}
+    function animVal({duration=.5,delay=0,easing='ease-out',onUpdate,onComplete}){
+      const ease=toEaseFn(easing),dur=duration*1000,del=delay*1000;let start,raf,res;
+      const finished=new Promise(r=>res=r);
+      function step(now){if(start===undefined)start=now;const el=now-start-del;
+        if(el<0){raf=requestAnimationFrame(step);return;}
+        const p=Math.min(el/dur,1);onUpdate&&onUpdate(ease(p));
+        if(p<1)raf=requestAnimationFrame(step);else{onComplete&&onComplete();res();}}
+      raf=requestAnimationFrame(step);return {finished,cancel:()=>cancelAnimationFrame(raf)};
+    }
+    function animDom(target,kf,opts={}){
+      const els=resolveEls(target),dur=opts.duration??.5,ez=cssEase(opts.easing),n=els.length;let maxMs=0;
+      els.forEach((el,i)=>{
+        const del=typeof opts.delay==='function'?opts.delay(i,n):(opts.delay||0);
+        for(const k in kf){const v=kf[k];if(Array.isArray(v))el.style[k]=v[0];}
+        el.style.transition='none';void el.offsetWidth;
+        el.style.transition=Object.keys(kf).map(k=>`${k} ${dur}s ${ez} ${del}s`).join(',');
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const k in kf){const v=kf[k];el.style[k]=Array.isArray(v)?v[1]:v;}}));
+        const tot=(dur+del)*1000;maxMs=Math.max(maxMs,tot);
+        setTimeout(()=>{el.style.transition='';},tot+60);
+      });
+      return {finished:new Promise(r=>setTimeout(r,maxMs+40))};
+    }
+    const M={ animate:(t,a,b)=>typeof t==='function'?animVal({...(a||{}),onUpdate:t}):animDom(t,a,b),
+      stagger:(step,o={})=>{const s=o.start||0;return (i)=>s+i*step;} };
+    const clamp=(v,a,b)=>Math.min(b,Math.max(a,v));
+
+    // ---------- three: the iris ----------
+    const canvas=this._q('#gl');
+    const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+    this._renderer=renderer;
+    renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+    const scene=new THREE.Scene();
+    const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,100);
+    camera.position.set(0,0,5.4);
+    const eye=new THREE.Group(); scene.add(eye); this.eye=eye;
+    scene.fog=new THREE.FogExp2(0x000000,0.05);
+    const BOWL=1.5;   // how deep the iris dishes back toward the recessed pupil
+
+    // ---- iris as a shaded surface: procedural stroma, fibres, collarette, wet catchlight ----
+    const irisVert='varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
+    const irisFrag=[
+      'varying vec2 vUv;',
+      'uniform float uTime,uOpacity,uPupil;',
+      'uniform vec2 uGlint;',
+      'uniform vec3 uColInner,uColOuter,uColRim;',
+      'float hash(vec2 p){ p=fract(p*vec2(127.31,311.7)); p+=dot(p,p+34.5); return fract(p.x*p.y); }',
+      'float vnoise(vec2 p){ vec2 i=floor(p),f=fract(p); f=f*f*(3.0-2.0*f);',
+      '  float a=hash(i),b=hash(i+vec2(1.0,0.0)),c=hash(i+vec2(0.0,1.0)),d=hash(i+vec2(1.0,1.0));',
+      '  return mix(mix(a,b,f.x),mix(c,d,f.x),f.y); }',
+      'float fbm(vec2 p){ float v=0.0,a=0.5; for(int i=0;i<3;i++){ v+=a*vnoise(p); p*=2.03; a*=0.5; } return v; }',
+      'void main(){',
+      '  vec2 p=(vUv-0.5)*2.0;',
+      '  float r=length(p);',
+      '  float ang=atan(p.y,p.x);',
+      '  vec2 cir=vec2(cos(ang),sin(ang));',
+      '  float rp=mix(0.17,0.36,clamp(uPupil,0.0,1.0));',
+      '  float t=clamp((r-rp)/(1.0-rp),0.0,1.0);',
+      '  float warp=fbm(cir*3.0+vec2(r*2.0)+uTime*0.015);',
+      '  float fibre=fbm(cir*34.0+vec2(r*4.0)+warp*0.6);',
+      '  float crypt=fbm(cir*6.0+vec2(r*3.0)-warp);',
+      '  vec3 base=mix(uColInner,uColOuter,smoothstep(0.0,0.62,t));',
+      '  base=mix(base,uColRim,smoothstep(0.72,1.0,t));',
+      '  float tex=0.42+0.85*fibre;',
+      '  tex*=0.42+1.05*crypt;',
+      '  float coll=exp(-pow((t-0.26)/0.05,2.0))*(0.7+0.5*crypt);',
+      '  tex+=coll*0.3;',
+      '  tex*=1.0-0.10*smoothstep(0.0,1.0,sin(t*26.0+fibre*4.0));',
+      '  vec3 col=base*tex;',
+      '  col+=uColInner*exp(-pow((r-rp)/0.02,2.0))*0.38;',
+      '  col*=1.0-0.66*smoothstep(0.88,1.0,t);',
+      '  col+=uColRim*0.5*exp(-pow((t-0.9)/0.05,2.0));',
+      '  float pe=smoothstep(rp-0.015,rp+0.02,r);',
+      '  col=mix(vec3(0.012,0.012,0.02),col,pe);',
+      '  float sheen=exp(-dot(p-uGlint,p-uGlint)*5.5);',
+      '  vec2 cl=uGlint*0.5+vec2(-0.16,0.32);',
+      '  float cat=exp(-dot(p-cl,p-cl)*120.0);',
+      '  col+=vec3(0.85,0.9,1.0)*sheen*0.06*pe;',
+      '  col+=vec3(1.0)*cat*0.85;',
+      '  col+=0.035*sin(vec3(0.0,2.1,4.2)+fibre*7.0+t*3.0)*smoothstep(0.2,0.95,t);',
+      '  float alpha=(1.0-smoothstep(0.78,1.0,r))*uOpacity;',
+      '  gl_FragColor=vec4(col,alpha);',
+      '}'
+    ].join('\n');
+    const buildEye=()=>{
+      const P=self.params;
+      const ci=new THREE.Color(P.iris[0]),co=new THREE.Color(P.iris[1]),cr=new THREE.Color(P.iris[2]);
+      if(self._eyeMesh){ const u=self._eyeMesh.material.uniforms; u.uColInner.value.copy(ci); u.uColOuter.value.copy(co); u.uColRim.value.copy(cr); return; }
+      const mat=new THREE.ShaderMaterial({
+        uniforms:{ uTime:{value:0}, uOpacity:{value:self._revealed?0.95:0}, uPupil:{value:0.35}, uGlint:{value:new THREE.Vector2(0.18,0.28)}, uColInner:{value:ci}, uColOuter:{value:co}, uColRim:{value:cr} },
+        vertexShader:irisVert, fragmentShader:irisFrag, transparent:true, depthWrite:false, fog:false, blending:THREE.NormalBlending
+      });
+      const mesh=new THREE.Mesh(new THREE.PlaneGeometry(2.8,2.8,1,1),mat);
+      eye.add(mesh); self._eyeMesh=mesh; eye.userData.mat=mat;
+      eye.userData.setOpacity=(o)=>{ mat.uniforms.uOpacity.value=o; };
+    };
+    this._rebuildEye=buildEye;
+    buildEye();
+    eye.scale.setScalar(0);
+
+    const stars=(function(){
+      const pos=[],col=[];const warm=new THREE.Color('#f4ead6');
+      for(let i=0;i<760;i++){
+        const x=(Math.random()-0.5)*18,y=(Math.random()-0.5)*11,z=-1.5-Math.random()*9;
+        pos.push(x,y,z);const b=0.18+Math.random()*0.5;col.push(warm.r*b,warm.g*b,warm.b*b);
+      }
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+      g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+      const m=new THREE.PointsMaterial({size:0.022,vertexColors:true,transparent:true,opacity:0,
+        blending:THREE.AdditiveBlending,depthWrite:false,sizeAttenuation:true});
+      const p=new THREE.Points(g,m);scene.add(p);return {p,m};
+    })();
+
+    // ---------- pointer + cursor ----------
+    const pointer={x:0,y:0,tx:0,ty:0};
+    const cursor={x:innerWidth/2,y:innerHeight/2,tx:innerWidth/2,ty:innerHeight/2};
+    const onPointerMove=(e)=>{
+      pointer.tx=(e.clientX/innerWidth)*2-1;
+      pointer.ty=-((e.clientY/innerHeight)*2-1);
+      cursor.tx=e.clientX; cursor.ty=e.clientY;
+    };
+    addEventListener('pointermove',onPointerMove); this._cleanup.push(()=>removeEventListener('pointermove',onPointerMove));
+    const curEl=this._q('.cur');
+
+    // ---------- 3D stage drag (rubber-band parallax) ----------
+    const world=this._q('#world'), stage=this._q('#stage');
+    const reidCard=this._q('#card-reid');
+    const W={rx:0,ry:0,trx:0,try_:0,drag:false,sx:0,sy:0,brx:0,bry:0,moved:0,detailOpen:false,startCard:null};
+    let diving=false;
+    function parallaxTargets(){ if(!W.drag && !W.detailOpen && !diving){ W.try_+=(0-W.try_)*0.06; W.trx+=(0-W.trx)*0.06; } }
+    const onDown=(e)=>{
+      if(W.detailOpen) return;
+      W.drag=true; W.moved=0; W.sx=e.clientX; W.sy=e.clientY; W.brx=W.trx; W.bry=W.try_;
+      W.startCard=e.target.closest && e.target.closest('.pcard');
+      document.body.classList.add('grab');
+    };
+    const onMove=(e)=>{
+      if(!W.drag) return;
+      const dx=e.clientX-W.sx, dy=e.clientY-W.sy; W.moved=Math.max(W.moved,Math.abs(dx)+Math.abs(dy));
+      W.try_=clamp(W.bry+dx*0.10,-26,26); W.trx=clamp(W.brx-dy*0.08,-16,16);
+    };
+    const endDrag=(e)=>{
+      if(!W.drag) return; W.drag=false; document.body.classList.remove('grab');
+      const card=e&&e.target&&e.target.closest&&e.target.closest('.pcard');
+      const target=card||W.startCard;
+      if(!W.detailOpen && W.moved<=8 && target) openDetail(target.dataset.proj);
+      W.startCard=null;
+    };
+    world.addEventListener('pointerdown',onDown);
+    world.addEventListener('pointermove',onMove);
+    world.addEventListener('pointerup',endDrag);
+    world.addEventListener('pointercancel',()=>{ W.drag=false; W.startCard=null; document.body.classList.remove('grab'); });
+
+    // Hover is resolved every frame in the render loop (hit-testing the cursor against each
+    // card's rect with a sticky keep-alive margin). The element's own pointerenter/leave is
+    // unreliable here: the hover-lift moves the card out from under the cursor, firing
+    // pointerleave and causing an on/off flicker at the card's edges.
+
+    // ---------- detail overlay ----------
+    const detail=this._q('#detail'), sheet=detail.querySelector('.sheet'), scrim=detail.querySelector('.scrim');
+    // grow the verifier bars in when they scroll into view (progressive: bars stay filled if unsupported)
+    const _verify=this._q('.verify');
+    if(_verify && 'IntersectionObserver' in window){
+      _verify.classList.add('arm');
+      const _vc=_verify.nextElementSibling;
+      if(_vc && _vc.classList && _vc.classList.contains('vcontrast')) _vc.classList.add('arm');
+      const _io=new IntersectionObserver((es)=>{ es.forEach(e=>{ if(e.isIntersecting){ _verify.classList.add('lit'); if(_vc&&_vc.classList) _vc.classList.add('lit'); _io.disconnect(); } }); },{threshold:0.2});
+      _io.observe(_verify);
+      this._cleanup.push(()=>{ try{_io.disconnect();}catch(e){} });
+    }
+    const showView=(key)=>{ self._qa('.dview').forEach(v=>{ v.style.display = (v.dataset.proj===key)?'block':'none'; }); };
+    self._qa('.dview img').forEach(im=>{ try{ im.decoding='async'; }catch(_e){} });   // decode detail imagery off the main thread so the first zoom frames don't hitch
+    function openDetail(key){
+      if(diving||W.detailOpen) return;
+      const view=self._q('.dview[data-proj="'+key+'"]'); if(!view) return;
+      const clicked=self._q('.pcard[data-proj="'+key+'"]'); if(!clicked) return;
+      const tx=self.params.openTx||'zoom'; self._openTx=tx;   // which fly-in method (tweakable)
+      diving=true; W.detailOpen=true; W.trx=0; W.try_=0;
+      document.body.classList.remove('hot');
+      const _grain=self._q('.grain'); if(_grain) _grain.style.display='none';   // pause film-grain (mix-blend-mode:overlay) while a project is open
+      self._qa('.pcard').forEach(c=>{ c._hover=false; c.classList.remove('is-hover'); });
+
+      // remember the clicked card's rect (the ZOOM method flies out of / back into it)
+      const r=clicked.getBoundingClientRect();
+      const cx=r.left+r.width/2, cy=r.top+r.height/2;
+      const sc=Math.max(0.06, r.width/innerWidth);
+      const tx0=cx-innerWidth*sc/2, ty0=cy-innerHeight*sc/2;
+      self._flip={sc:sc,tx0:tx0,ty0:ty0,card:clicked};
+
+      // other cards drop back into the distance; the clicked one dissolves out
+      self._qa('.pcard').forEach(c=>{ if(c!==clicked) c.classList.add('recede'); });
+      clicked._zooming=true;
+      if(self._cardFade) self._cardFade.cancel();
+      self._cardFade=M.animate(t=>{ clicked.style.opacity=String(1-t); },{duration:.32,easing:'ease'});
+      M.animate('.brand,nav a,.whint',{opacity:[1,0]},{duration:.3});
+
+      showView(key); if(sheet) sheet.scrollTop=0;
+      sheet.style.transformOrigin='0 0';
+      sheet.style.transition='none';                 // every method tweens frame-by-frame, so kill the CSS transition
+      sheet.style.willChange='transform,opacity';
+      detail.classList.add('arming');
+      const smooth=t=>t*t*(3-2*t);
+      if(self._zoomAnim) self._zoomAnim.cancel();
+      const finishOpen=()=>{ self._frozen=true; sheet.style.willChange='auto'; if(scrim) scrim.style.opacity='1'; detail.classList.add('open'); diving=false; };
+
+      if(tx==='iris'){
+        // ---- IRIS: the page opens out THROUGH the eye's pupil — a circle expanding from 50% 46%,
+        // with the live eye visible behind it until the circle swallows the screen ----
+        sheet.style.transform='none'; sheet.style.opacity='1';
+        if(scrim) scrim.style.opacity='1';
+        const R0=1.4, R1=152, eI=cb(.5,0,.16,1);
+        detail.style.willChange='clip-path';
+        const setClip=(R)=>{ const v='circle('+R+'vmax at 50% 46%)'; detail.style.clipPath=v; detail.style.webkitClipPath=v; };
+        setClip(R0);
+        self._zoomAnim=M.animate(p=>{ setClip((R0+(R1-R0)*eI(p)).toFixed(2)); },
+          {duration:.74,easing:'linear',onComplete:()=>{ detail.style.clipPath=''; detail.style.webkitClipPath=''; detail.style.willChange='auto'; finishOpen(); }});
+      } else if(tx==='rise'){
+        // ---- RISE: the page slides up over the scene ----
+        sheet.style.opacity='1'; if(scrim) scrim.style.opacity='0';
+        const eR=cb(.16,1,.3,1);
+        self._zoomAnim=M.animate(p=>{ const g=eR(p);
+          sheet.style.transform='translateY('+((1-g)*100).toFixed(2)+'%)';
+          if(scrim) scrim.style.opacity=smooth(clamp(p/0.6,0,1)).toFixed(3);
+        },{duration:.62,easing:'linear',onComplete:()=>{ sheet.style.transform='translateY(0%)'; finishOpen(); }});
+      } else {
+        // ---- ZOOM (default): the page grows out of the clicked card's centre ----
+        self._frozen=true;                             // park the eye — it's covered; frees the GPU for the heavy scaling page
+        canvas.style.willChange='transform,opacity';
+        const eG=cb(.42,0,.18,1), eS=t=>1-Math.pow(1-t,2.2);
+        self._zoomAnim=M.animate(p=>{
+          const g=eG(p), s=sc+(1-sc)*g, tX=tx0*(1-g), tY=ty0*(1-g);
+          sheet.style.transform='translate('+tX.toFixed(1)+'px,'+tY.toFixed(1)+'px) scale('+s.toFixed(4)+')';
+          sheet.style.opacity=smooth(clamp(p/0.5,0,1)).toFixed(3);
+          if(scrim) scrim.style.opacity=eS(p).toFixed(3);
+          canvas.style.transform='scale('+(1+0.09*g).toFixed(3)+')';
+          canvas.style.opacity=(1-0.8*g).toFixed(3);
+        },{duration:.66,easing:'linear',onComplete:()=>{ sheet.style.transform='translate(0px,0px) scale(1)'; sheet.style.opacity='1'; finishOpen(); }});
+      }
+    }
+    function closeDetail(){
+      if(!W.detailOpen) return;
+      W.detailOpen=false; diving=true;
+      self._frozen=false;                            // wake the eye back up for the reverse
+      detail.classList.remove('open');
+      const tx=self._openTx||'zoom';
+      const f=self._flip||{tx0:0,ty0:0,sc:.2,card:null};
+      sheet.style.transition='none';
+      const smooth=t=>t*t*(3-2*t);
+      if(self._zoomAnim) self._zoomAnim.cancel();
+      const finishClose=()=>{
+        detail.classList.remove('arming');
+        sheet.style.transform=''; sheet.style.opacity=''; sheet.style.transition=''; sheet.style.willChange='auto';
+        canvas.style.transform=''; canvas.style.opacity=''; canvas.style.willChange='auto';
+        detail.style.clipPath=''; detail.style.webkitClipPath=''; detail.style.willChange='auto';
+        if(scrim) scrim.style.opacity='';
+        self._applyGrain();
+        diving=false;
+      };
+
+      if(tx==='iris'){
+        const R0=1.4, R1=152, eI=cb(.5,0,.16,1);
+        detail.style.willChange='clip-path';
+        const setClip=(R)=>{ const v='circle('+R+'vmax at 50% 46%)'; detail.style.clipPath=v; detail.style.webkitClipPath=v; };
+        self._zoomAnim=M.animate(p=>{ setClip((R1+(R0-R1)*eI(p)).toFixed(2)); },{duration:.52,easing:'linear',onComplete:finishClose});
+      } else if(tx==='rise'){
+        sheet.style.willChange='transform,opacity';
+        const eR=cb(.5,0,.2,1);
+        self._zoomAnim=M.animate(p=>{ const g=eR(p);
+          sheet.style.transform='translateY('+(g*100).toFixed(2)+'%)';
+          if(scrim) scrim.style.opacity=(1-smooth(clamp(p/0.7,0,1))).toFixed(3);
+        },{duration:.5,easing:'linear',onComplete:finishClose});
+      } else {
+        sheet.style.transformOrigin='0 0';
+        sheet.style.willChange='transform,opacity';
+        canvas.style.willChange='transform,opacity';
+        const eC=cb(.45,0,.2,1);
+        self._zoomAnim=M.animate(p=>{
+          const g=eC(p), s=1+(f.sc-1)*g, tX=f.tx0*g, tY=f.ty0*g;
+          sheet.style.transform='translate('+tX.toFixed(1)+'px,'+tY.toFixed(1)+'px) scale('+s.toFixed(4)+')';
+          sheet.style.opacity=(1-smooth(clamp((p-0.3)/0.7,0,1))).toFixed(3);
+          if(scrim) scrim.style.opacity=(1-g).toFixed(3);
+          canvas.style.transform='scale('+(1+0.09*(1-g)).toFixed(3)+')';
+          canvas.style.opacity=(1-0.8*(1-g)).toFixed(3);
+        },{duration:.46,easing:'linear',onComplete:finishClose});
+      }
+
+      if(f.card){ f.card._zooming=false; if(self._cardFade) self._cardFade.cancel(); self._cardFade=M.animate(t=>{ f.card.style.opacity=String(t); },{duration:.46,delay:.08,easing:'ease',onComplete:()=>{ f.card.style.opacity=''; }}); }
+      self._qa('.pcard').forEach(c=>{ c.classList.remove('recede','diving'); });
+      eye.userData.dimT=1;
+      M.animate('.brand,nav a,.whint',{opacity:[0,1]},{duration:.6,delay:.28});
+    }
+    this._qa('#detail [data-close]').forEach(el=>el.addEventListener('click',closeDetail));
+    const onKey=(e)=>{ if(e.key==='Escape'&&W.detailOpen) closeDetail(); };
+    addEventListener('keydown',onKey); this._cleanup.push(()=>removeEventListener('keydown',onKey));
+    this._qa('.dclose').forEach(b=>{
+      b.addEventListener('pointerenter',()=>document.body.classList.add('hot'));
+      b.addEventListener('pointerleave',()=>document.body.classList.remove('hot'));
+    });
+
+    // ---------- animate ----------
+    const cardCfg={'card-reid':{ryR:18,ryH:52,rxR:-6,rxH:-16,k:24},'p2':{ryR:-18,ryH:-52,rxR:-7,rxH:-18,k:24},'p3':{ryR:-24,ryH:-52,rxR:0,rxH:0,k:18},'p4':{ryR:16,ryH:52,rxR:8,rxH:20,k:22},'p5':{ryR:24,ryH:52,rxR:0,rxH:0,k:18},'p6':{ryR:-18,ryH:-52,rxR:10,rxH:22,k:24}};
+    const pcards=self._qa('.pcard');
+    const clock=new THREE.Clock();
+    const tick=()=>{
+      const P=self.params, t=clock.getElapsedTime();
+      cursor.x+=(cursor.tx-cursor.x)*0.2; cursor.y+=(cursor.ty-cursor.y)*0.2;
+      if(curEl) curEl.style.transform=`translate(${cursor.x}px,${cursor.y}px)`;
+      if(self._frozen){ self._raf=requestAnimationFrame(tick); return; }   // detail open: keep only the cursor alive, skip all WebGL work
+      pointer.x+=(pointer.tx-pointer.x)*0.09; pointer.y+=(pointer.ty-pointer.y)*0.09;
+      parallaxTargets();
+      W.rx+=(W.trx-W.rx)*0.08; W.ry+=(W.try_-W.ry)*0.08;
+      // ---- resolve hover by hit-testing the TRUE cursor against each card's screen rect,
+      // with a sticky keep-alive margin so the hover-lift/rotation can't slide the card out
+      // from under the cursor and flip it off (the reid card swings the most → it flickered) ----
+      if(!W.detailOpen){
+        const hit=(r,m)=>cursor.tx>=r.left-m&&cursor.tx<=r.right+m&&cursor.ty>=r.top-m&&cursor.ty<=r.bottom+m;
+        const activeCards=pcards.filter(c=>!(c._zooming||c.classList.contains('recede')||c.classList.contains('diving')));
+        let hoverCard=null;
+        const curHover=activeCards.find(c=>c._hover);
+        if(curHover && hit(curHover.getBoundingClientRect(),120)) hoverCard=curHover;   // sticky: hold hover until the cursor clearly leaves
+        if(!hoverCard) hoverCard=activeCards.find(c=>hit(c.getBoundingClientRect(),8))||null;   // activate only when the cursor is actually over a card
+        pcards.forEach(c=>{ const h=(c===hoverCard); if(h!==c._hover){ c._hover=h; c.classList.toggle('is-hover',h); } });
+        document.body.classList.toggle('hot',!!hoverCard);
+      }
+      if(stage && !W.detailOpen) stage.style.transform=`rotateX(${W.rx.toFixed(2)}deg) rotateY(${W.ry.toFixed(2)}deg)`;
+      // cards angle INTO the iris (left card faces right, right cards face left) + gentle depth parallax + small cursor nudge
+      if(!W.detailOpen){
+        const mx=pointer.x, my=pointer.y;
+        pcards.forEach(card=>{
+          if(card._zooming||card.classList.contains('recede')||card.classList.contains('diving')) return;
+          const c=cardCfg[card.id==='card-reid'?'card-reid':card.dataset.proj]; if(!c) return;
+          const th=(card._hover&&!W.detailOpen)?1:0;
+          card._h = (card._h==null) ? th : card._h+(th-card._h)*0.16;   // ease hover 0..1 in JS
+          const H=card._h;
+          // hover no longer swings the card in — it keeps its resting angle and just enlarges a touch + gently pulses
+          const ry=c.ryR+mx*4, rx=c.rxR-my*3, px=-mx*c.k, py=my*c.k;
+          const hs=1 + H*0.055, pv=card._pv;   // steady ~5.5% enlarge on hover (the pulse is now the red outline)
+          if(!pv || Math.abs(pv.ry-ry)>0.03 || Math.abs(pv.px-px)>0.2 || Math.abs(pv.hs-hs)>0.0008){
+            card.style.setProperty('--ry',ry.toFixed(2)+'deg');
+            card.style.setProperty('--rx',rx.toFixed(2)+'deg');
+            card.style.setProperty('--px',px.toFixed(1)+'px');
+            card.style.setProperty('--py',py.toFixed(1)+'px');
+            card.style.setProperty('--hs',hs.toFixed(4));
+            card._pv={ry,px,hs};
+          }
+        });
+      }
+      if(P.track){ eye.rotation.y+=(pointer.x*0.16-eye.rotation.y)*0.09; eye.rotation.x+=(-pointer.y*0.13-eye.rotation.x)*0.09; }
+      else { eye.rotation.y+=0.0016*P.spin; eye.rotation.x+=(0-eye.rotation.x)*0.05; }
+      // light camera parallax to peek into the dished iris — small, so the pupil stays centred
+      camera.position.x+=((pointer.x*0.2)-camera.position.x)*0.04;
+      camera.position.y+=((pointer.y*0.15)-camera.position.y)*0.04;
+      camera.lookAt(0,0,-0.55);
+      const breathe=1+Math.sin(t*0.9)*0.015;
+      if(eye.userData.targetScale!==undefined){
+        eye.userData.cur=(eye.userData.cur||0)+(eye.userData.targetScale-(eye.userData.cur||0))*0.04;
+        eye.scale.setScalar(eye.userData.cur*breathe);
+      }
+      if(eye.userData.glint){
+        const gp=eye.userData.glint.position;
+        gp.x+=(pointer.tx*0.34-gp.x)*0.2; gp.y+=(pointer.ty*0.28-gp.y)*0.2; gp.z=-BOWL*0.4;
+        const gT=W.detailOpen?0:0.95; const gm=eye.userData.glint.material; gm.opacity+=(gT-gm.opacity)*0.1;
+      }
+      if(eye.userData.mat && eye.userData.mat.uniforms){
+        const u=eye.userData.mat.uniforms; u.uTime.value=t;
+        const pdist=Math.min(1,Math.hypot(pointer.x,pointer.y));
+        const ptg=Math.max(0,Math.min(1, 0.14+pdist*0.7+Math.sin(t*0.5)*0.03));  // cursor near centre = constrict, away = dilate, + faint breath
+        u.uPupil.value+=(ptg-u.uPupil.value)*0.05;
+        u.uGlint.value.x+=((pointer.tx*0.5)-u.uGlint.value.x)*0.08;
+        u.uGlint.value.y+=((pointer.ty*0.5)-u.uGlint.value.y)*0.08;
+      }
+      eye.rotation.z=Math.sin(t*0.2*P.spin)*0.03;
+      const dim=(eye.userData.dimT!==undefined)?eye.userData.dimT:1;
+      const tgtOp=(self._revealed?0.95:0)*dim;
+      eye.userData._op=(eye.userData._op||0)+(tgtOp-(eye.userData._op||0))*0.05;
+      if(eye.userData.setOpacity) eye.userData.setOpacity(eye.userData._op);
+      stars.p.position.x+=(-pointer.x*0.5-stars.p.position.x)*0.04;
+      stars.p.position.y+=(-pointer.y*0.4-stars.p.position.y)*0.04;
+      stars.p.rotation.z=t*0.008;
+      renderer.render(scene,camera);
+      self._raf=requestAnimationFrame(tick);
+    };
+    const applySize=()=>{ renderer.setSize(innerWidth,innerHeight,false); camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); };
+    let lastW=innerWidth,rzTimer; const COARSE=matchMedia('(pointer:coarse)').matches;
+    const onResize=()=>{ if(COARSE&&innerWidth===lastW) return; clearTimeout(rzTimer); rzTimer=setTimeout(()=>{lastW=innerWidth;applySize();},120); };
+    addEventListener('resize',onResize); this._cleanup.push(()=>removeEventListener('resize',onResize));
+    applySize(); tick();
+
+    // ---------- intro ----------
+    const reveal=()=>{
+      eye.userData.targetScale=1; eye.userData.cur=0;
+      /* iris fades in via the render loop (setOpacity, gated on _revealed) */
+      M.animate(p=>{ if(eye.userData.glint) eye.userData.glint.material.opacity=0.9*p; },{duration:1.2,delay:1});
+      M.animate(p=>{ stars.m.opacity=0.85*p; },{duration:2,delay:.3});
+      M.animate('.brand',{opacity:[0,1]},{duration:.9,delay:.4});
+      M.animate('nav a',{opacity:[0,1]},{duration:.9,delay:.6});
+      M.animate('.pcard .pc-frame',{opacity:[0,1],transform:['translateY(34px) scale(.96)','none']},
+        {duration:.95,delay:M.stagger(0.14,{start:.7}),easing:[.22,.61,.36,1]});
+      M.animate('.whint',{opacity:[0,1]},{duration:1,delay:1.5});
+      self._revealed=true;
+    };
+    const curtain=this._q('#curtain');
+    const hideCurtain=()=>{ if(!curtain) return; curtain.style.opacity='0'; curtain.style.pointerEvents='none'; setTimeout(()=>{ curtain.style.display='none'; },800); };
+    if(self.params.intro){
+      M.animate('#curtain .lg',{opacity:[0,1]},{duration:.7}).finished.then(()=>{
+        setTimeout(()=>{
+          M.animate('#curtain .lg',{opacity:[1,0]},{duration:.5});
+          M.animate('#curtain',{opacity:[1,0]},{duration:.7,delay:.3}).finished.then(hideCurtain);
+          reveal();
+        },600);
+      });
+    } else {
+      if(curtain) curtain.style.display='none';
+      eye.userData.targetScale=1; eye.userData.cur=0;
+      eye.userData._op=0.95; if(eye.userData.setOpacity) eye.userData.setOpacity(0.95);
+      if(eye.userData.glint) eye.userData.glint.material.opacity=0.9;
+      stars.m.opacity=0.85;
+      this._qa('.pc-frame,.brand,nav a,.whint').forEach(e=>{ e.style.opacity=1; e.style.transform='none'; });
+      self._revealed=true;
+    }
+  }
+}
+</script>
+<script>
+/* Flip the switch, then load the other design. Simple is the default at the site root. */
+(function () {
+  var sw = document.querySelector('.ds-switch');
+  if (!sw) return;
+  sw.addEventListener('click', function (e) {
+    var a = e.target.closest('a');
+    if (!a || a.hasAttribute('aria-current')) { if (a) e.preventDefault(); return; }
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    sw.classList.add('flip');
+    setTimeout(function () { location.href = a.href; }, 230);
+  });
+  addEventListener('pageshow', function () { sw.classList.remove('flip'); });
+})();
+</script>
+<script>
+/* Draw the pipeline links between the four vision cards every frame, so they follow the cards as the scene moves. */
+(function () {
+  function rect(key, sel) {
+    var card = document.querySelector('.pcard[data-proj="' + key + '"]');
+    if (!card) return null;
+    return (card.querySelector(sel) || card).getBoundingClientRect();
+  }
+  function side(r, s) {
+    if (s === 'left') return [r.left, r.top + r.height / 2, -1, 0];
+    if (s === 'right') return [r.right, r.top + r.height / 2, 1, 0];
+    if (s === 'top') return [r.left + r.width / 2, r.top, 0, -1];
+    return [r.left + r.width / 2, r.bottom, 0, 1];
+  }
+  function f(n) { return n.toFixed(1); }
+  function draw() {
+    var svg = document.getElementById('links');
+    if (svg) {
+      var phone = innerWidth <= 760;
+      svg.querySelectorAll('.lk').forEach(function (g) {
+        var A, B;
+        if (phone) {
+          var fa = rect(g.dataset.a, '.pc-frame'), fb = rect(g.dataset.b, '.pc-frame');
+          var pa = rect(g.dataset.a, '.pc-photo'), pb = rect(g.dataset.b, '.pc-photo');
+          if (!fa || !fb || !pa || !pb) return;
+          /* stacked cards: a rail down the left margin, photo to photo */
+          A = [fa.left - 7, pa.top + pa.height / 2, 0, 1]; B = [fb.left - 7, pb.top + pb.height / 2, 0, -1];
+        } else {
+          var ra = rect(g.dataset.a, '.pc-photo'), rb = rect(g.dataset.b, '.pc-photo');
+          if (!ra || !rb) return;
+          A = side(ra, g.dataset.sa); B = side(rb, g.dataset.sb);
+        }
+        var k = Math.max(phone ? 6 : 40, Math.hypot(B[0] - A[0], B[1] - A[1]) * 0.35);
+        var d = 'M' + f(A[0]) + ' ' + f(A[1]) + ' C' + f(A[0] + A[2] * k) + ' ' + f(A[1] + A[3] * k) + ' ' + f(B[0] + B[2] * k) + ' ' + f(B[1] + B[3] * k) + ' ' + f(B[0]) + ' ' + f(B[1]);
+        g.querySelectorAll('path').forEach(function (p) { p.setAttribute('d', d); });
+        var dots = g.querySelectorAll('circle');
+        dots[0].setAttribute('cx', f(A[0])); dots[0].setAttribute('cy', f(A[1]));
+        dots[1].setAttribute('cx', f(B[0])); dots[1].setAttribute('cy', f(B[1]));
+      });
+    }
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  setTimeout(function () { document.body.classList.add('links-on'); }, 2300);
+})();
+</script>
+</body>
+</html>
